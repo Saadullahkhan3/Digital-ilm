@@ -1,0 +1,39 @@
+_______________________________
+[ IDEA: MCQ's and Leaderboard ]
+-------------------------------
+>>+ SUMMARY:
+-> MCQ Template: We will create a template for MCQ's where we can add our custom questions with their four options.
+-> Score: User get score on each correct answer.
+-> Leader-board: Based on user scores.
+
+< CORE PART: PART 1 + PART 2 >
+++++++++++++++++-< PART 1 >-+++++++++++++++++
+-->> MCQ
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> GET
++ Username: At now, user can access questions but any name is needed(may be unique)
+
+> POST
++ We expect user answer in a list like [a, c, d, b, 0, ..] (0 means user skip the answer, actually except (a to b) we considerd all the element as skipped.
+~ We return user score and save that score in Database.
+++ When we achieve above part, then we can also return that user's correct, wrong, skipped answers number and even percentage, also may be answer of each wrong answer.
+
+++++++++++++++++-< PART 2 >-+++++++++++++++++
+-->> LEADER-BOARD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ We will create leaderboard by all user score and sort all in descesding order.
++ Leaderboard will be based on total score, that can be earn from multiple different questions(template).
+
+
+_-_-_-_-_-_-_-_- ADDITIONAL _-_-_-_-_-_-_-_-
+This is locked part until, we complete core part!
+
+++++++++++++++++-< TEMPLATE OWNER >-+++++++++++++++++
+~ An Admin account is needed to create and access own templates.
+_______	OR ______
+~ We only create templates by own.
+
+
+XXXXXXXXXXXX END XXXXXXXXXXXXXXXX
+[ Saadullah Khan | Shayan Adnan ]
+---------------------------------
