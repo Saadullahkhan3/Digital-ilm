@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block mybody %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="user-data">
+            <label for="username">
+                Username
+                <input name="username" type="text" required>
+            </label>
+        </div>
+        <div class="quiz-container">
+            {% for question in questions %}
+                <div class="question-block">
+                    <h3>{{ question.question }}</h3>
+                    <div class="options">
+                        {% for option_key, option_value in question.options.items %}
+                            <label>
+                                <input type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required>
+                                {{ option_value }}
+                            </label><br>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr> 
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+{% endblock %}
