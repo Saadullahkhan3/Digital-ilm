@@ -35,6 +35,10 @@ class Question(models.Model):
     question_sheet = models.ForeignKey(QuestionSheet, on_delete=models.CASCADE, related_name="question_sheet")
 
 
+    def answer_with_id(self):
+        return {f"{self.id}" : self.q_ans}
+
+
     def all(self):
         def create_options_dict(*options):
             options_dict = dict()
