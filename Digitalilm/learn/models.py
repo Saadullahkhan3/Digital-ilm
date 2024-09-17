@@ -1,6 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User 
+'''
 
+
+
+
+
+
+
+
+
+
+'''
 
 # Create your models here.
 class QuestionSheet(models.Model):
@@ -8,9 +19,24 @@ class QuestionSheet(models.Model):
 
     tutor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tutor")
 
+    # Ye ho,, ya na ho?
+    # description
+    l = [
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),              
+        (5, 5)]
+    level = models.IntegerField(choices=l)
 
     def all_questions(self):
         return self.question_sheet.all()
+    
+    def total_questions(self):
+        return len(self.all_questions)
+
+    def __str__(self):
+        return self.title
 
 
 
@@ -36,7 +62,7 @@ class Question(models.Model):
 
 
     def answer_with_id(self):
-        return {f"{self.id}" : self.q_ans}
+        return {f"{self.id}" : self.answer}
 
 
     def all(self):
@@ -48,7 +74,7 @@ class Question(models.Model):
         
         options = [option for option in (self.a, self.b, self.c, self.d) if option]
 
-        return {"question": self.q, "options": create_options_dict(options)}
+        return {"question": self.question, "options": create_options_dict(options)}
 
 
 
@@ -56,7 +82,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100)
     score = models.IntegerField()
 
-    attempted_sheet = models.ForeignKey(QuestionSheet, on_delete=models.CASCADE, related_name="questions_sheet")
+    attempted_sheet = models.ForeignKey(QuestionSheet, on_delete=models.CASCADE, related_name="attempted_sheet")
 
 
     def __str__(self):

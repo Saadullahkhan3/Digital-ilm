@@ -2,8 +2,41 @@
 
 {% block title %}Quiz{% endblock %}
 
-{% block mybody %}
-    <form method="POST">
+{% block body %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{ sheet.title }}</h2>
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input name="username" type="text" class="form-control" id="username" required>
+                </div>
+                <div class="quiz-container">
+                    {% for question in questions %}
+                        <div class="question-block mb-4">
+                            <h3>{{ question.question }}</h3>
+                            <div class="options">
+                                {% for option_key, option_value in question.options.items %}
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required>
+                                        <label class="form-check-label">{{ option_value }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+    {% comment %} <form method="POST">
         {% csrf_token %}
         <div class="user-data">
             <label for="username">
@@ -28,5 +61,5 @@
             {% endfor %}
             <button type="submit">Submit</button>
         </div>
-    </form>
+    </form> {% endcomment %}
 {% endblock %}

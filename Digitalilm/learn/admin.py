@@ -12,7 +12,7 @@ class AdminQuestionSheet(admin.ModelAdmin):
     inlines = (QuestionInline,)
 
 class AdminStudent(admin.ModelAdmin):
-    list_display = ("name", "score", "questions_sheet")
+    list_display = ("name", "score", "attempted_sheet")
 
 admin.site.register(QuestionSheet, AdminQuestionSheet)
 admin.site.register(Student, AdminStudent)

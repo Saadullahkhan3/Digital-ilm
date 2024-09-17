@@ -1,12 +1,16 @@
 {% extends "layout.html" %}
 
 {% block body %}
-
-<h1>Welcome to HOME</h1>
-
-<button>Browse Questions</button>
-
-<h3><button>Become a Tutor</button></h3>
-
-
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 text-center">
+                <h1 class="display-4">Welcome to Digit Ilm</h1>
+                <h2 class="lead">Learn and Teach.</h2>
+                <div class="mt-4">
+                    <a href="{% url 'home2' %}" class="btn btn-primary btn-lg mx-2">Browse Questions</a>
+                    <a href="{% url 'register-tutor' %}" class="btn btn-success btn-lg mx-2">Become a Tutor</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
