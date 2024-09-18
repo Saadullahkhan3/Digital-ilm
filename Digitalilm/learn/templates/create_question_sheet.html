@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <form method="post">
+        {% csrf_token %}
+        
+        <h1 class="text-center mb-4">Question Sheet</h1>
+        
+        {{ question_sheet_form.as_p }}
+        
+        <h2 class="mt-5 text-center">Questions</h2>
+        {{ formset.management_form }}  <!-- Management form required for formset -->
+        
+        <div id="questions">
+            {% for form in formset %}
+                <div class="question-container border-bottom pb-3 mb-4">
+                    {{ form.as_p }}
+                    <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
+                </div>
+            {% endfor %}
+            <div id="additional-questions"></div>
+        </div>
+        
+        <button type="button" id="add-question" class="btn btn-primary mt-4">Add Question</button>
+        <button type="submit" class="btn btn-success mt-4">Submit</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        var questionIndex = {{ formset.total_form_count }};
+        
+        // Remove question event handler
+        $(document).on('click', '.remove-question', function() {
+            $(this).parent('.question-container').remove();
+            updateQuestionNumbers();
+        });
+        
+        // Add question event handler
+        $('#add-question').click(function() {
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'get_question_form' %}',
+                data: {'index': questionIndex},
+                success: function(data) {
+                    var html = `
+                        <div class="question-container border-bottom pb-3 mb-4">
+                            ${data.html}
+                            <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
+                        </div>
+                    `;
+                    $('#additional-questions').append(html);
+                    questionIndex++;
+                    updateQuestionNumbers();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        
+        function updateQuestionNumbers() {
+            $('.question-container').each(function(index, element) {
+                $(element).find('h4').text('Question ' + (index + 1));
+            });
+        }
+    });
+</script>
+{% endblock %}

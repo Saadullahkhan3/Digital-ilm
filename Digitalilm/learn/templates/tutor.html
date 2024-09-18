@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}LEARN{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="display-2 text-center mb-3">{{ tutor.username }}</h1>
+        <h2 class="display-4 text-center mb-5">What you done;</h1>
+        
+        <a href="{% url 'create_question_sheet' %}" 
+        class="btn btn-success btn-lg mx-2 mb-5"
+        style="
+        width: 100%;
+        ">Create Sheet</a>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for question in questions %}
+                <div class="col">
+                    <div class="card h-100 shadow-lg">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ question.title }}</h5>
+                            <h6 class="text-muted mb-2">Level: {{ question.level }}</h6>
+                            <p class="card-text">{{ question.description|truncatewords:20 }}</p>
+                            <a href="{% url 'question_sheet_id' question.id %}" class="btn btn-primary btn-lg w-100 mt-auto">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -8,7 +8,7 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title">{{ sheet.title }}</h2>
+                <h2 class="card-title text-center">{{ sheet.title }}</h2>
                 <div class="form-group mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input name="username" type="text" class="form-control" id="username" required>
@@ -16,7 +16,7 @@
                 <div class="quiz-container">
                     {% for question in questions %}
                         <div class="question-block mb-4">
-                            <h3>{{ question.question }}</h3>
+                            <h3 class="fw-light">{{ question.question }}</h3>
                             <div class="options">
                                 {% for option_key, option_value in question.options.items %}
                                     <div class="form-check mb-2">

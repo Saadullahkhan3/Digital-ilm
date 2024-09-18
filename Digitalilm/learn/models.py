@@ -1,17 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User 
-'''
 
 
-
-
-
-
-
-
-
-
-'''
 
 # Create your models here.
 class QuestionSheet(models.Model):
@@ -27,10 +17,10 @@ class QuestionSheet(models.Model):
         (3, 3),
         (4, 4),              
         (5, 5)]
-    level = models.IntegerField(choices=l)
+    level = models.IntegerField(choices=l, default=1)
 
     def all_questions(self):
-        return self.question_sheet.all()
+        return self.questions.all()
     
     def total_questions(self):
         return len(self.all_questions)
@@ -58,8 +48,10 @@ class Question(models.Model):
     c = models.CharField(max_length=100, blank=True, null=True)
     d = models.CharField(max_length=100, blank=True, null=True)
 
-    question_sheet = models.ForeignKey(QuestionSheet, on_delete=models.CASCADE, related_name="question_sheet")
+    question_sheet = models.ForeignKey(QuestionSheet, on_delete=models.CASCADE, related_name="questions")
 
+    def __str__(self):
+        return self.question
 
     def answer_with_id(self):
         return {f"{self.id}" : self.answer}

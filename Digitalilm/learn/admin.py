@@ -16,4 +16,5 @@ class AdminStudent(admin.ModelAdmin):
 
 admin.site.register(QuestionSheet, AdminQuestionSheet)
 admin.site.register(Student, AdminStudent)
+admin.site.register(Question)
 

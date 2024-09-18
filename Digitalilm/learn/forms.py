@@ -1,7 +1,18 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import QuestionSheet
+from .models import QuestionSheet, Question
+
+class QuestionSheetForm(forms.ModelForm):
+    class Meta:
+        model = QuestionSheet
+        fields = ['title', 'level']
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['question', 'answer', 'a', 'b', 'c', 'd']
+
 
 class TutorRegistrationForm(UserCreationForm):
     email = forms.EmailField()
