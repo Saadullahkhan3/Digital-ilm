@@ -123,3 +123,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Auth config
+LOGIN_URL = "/accounts/login"
+LOGOUT_URL = "/accounts/logout"
+
+# Redirect to Home by URL not its name!
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+# Become a Tutor
+# name: Muzammil Bilwani
+# username: MuzammilBilwani
+# Email: Muzammil.Bilwani@hotmail.com
+# Password: MuZZamMilhonMennOhoo

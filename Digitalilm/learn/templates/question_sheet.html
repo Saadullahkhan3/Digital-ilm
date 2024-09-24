@@ -3,30 +3,47 @@
 {% block title %}Quiz{% endblock %}
 
 {% block body %}
+
+{% if questions_found == 0 %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title text-center display-1 text-danger">404</h1>
+            <h2 class="card-title text-center display-3">Oops!</h2>
+            <h3 class=" text-center display-5 mt-5">Question Sheet is not found!</h3>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
 <form method="POST">
     {% csrf_token %}
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title text-center">{{ sheet.title }}</h2>
+                <h1 class="card-title text-center display-3">{{ sheet.title }}</h1>
+                <h2 class="card-title text-center display-5 mb-4">{{ sheet.tutor }}</h2>
+            
                 <div class="form-group mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input name="username" type="text" class="form-control" id="username" required>
+                    <input name="username" type="text" class="form-control mb-4" id="username" required>
                 </div>
                 <div class="quiz-container">
                     {% for question in questions %}
-                        <div class="question-block mb-4">
-                            <h3 class="fw-light">{{ question.question }}</h3>
-                            <div class="options">
-                                {% for option_key, option_value in question.options.items %}
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required>
-                                        <label class="form-check-label">{{ option_value }}</label>
-                                    </div>
-                                {% endfor %}
+                    <div class="question-block mb-4">
+                        <h3 class="">{{ question.question }}</h3>
+                        {% comment %} <h3 class="fw-light">{{ question.question }}</h3> {% endcomment %}
+                        <div class="options">
+                            {% for option_key, option_value in question.options.items %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required>
+                                <label class="form-check-label">{{ option_value }}</label>
                             </div>
+                            {% endfor %}
                         </div>
-                        <hr>
+                    </div>
+                    <hr>
                     {% endfor %}
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -35,31 +52,6 @@
     </div>
 </form>
 
+{% endif %}
 
-    {% comment %} <form method="POST">
-        {% csrf_token %}
-        <div class="user-data">
-            <label for="username">
-                Username
-                <input name="username" type="text" required>
-            </label>
-        </div>
-        <div class="quiz-container">
-            {% for question in questions %}
-                <div class="question-block">
-                    <h3>{{ question.question }}</h3>
-                    <div class="options">
-                        {% for option_key, option_value in question.options.items %}
-                            <label>
-                                <input type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required>
-                                {{ option_value }}
-                            </label><br>
-                        {% endfor %}
-                    </div>
-                </div>
-                <hr> 
-            {% endfor %}
-            <button type="submit">Submit</button>
-        </div>
-    </form> {% endcomment %}
 {% endblock %}

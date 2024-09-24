@@ -17,12 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-
+from django.contrib.auth.urls import views as auth_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
-    path('learn/', include('learn.urls'))
+    path('learn/', include('learn.urls')),
+
+    # Django default login/logout configuration
+    path('accounts/', include("django.contrib.auth.urls"))
 ]
 
 

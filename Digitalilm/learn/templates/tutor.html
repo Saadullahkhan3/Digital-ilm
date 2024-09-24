@@ -4,8 +4,9 @@
 
 {% block body %}
     <div class="container mt-5">
-        <h1 class="display-2 text-center mb-3">{{ tutor.username }}</h1>
-        <h2 class="display-4 text-center mb-5">What you done;</h1>
+        <h1 class="display-1 text-center mb-3">{{ tutor.username}}</h1>
+        <h3 class="text-center text-center fw-light">{{ tutor.date_joined|date:"d-M-Y" }}</h3>
+        <h2 class="display-4 text-center mb-5">What you done;</h2>
         
         <a href="{% url 'create_question_sheet' %}" 
         class="btn btn-success btn-lg mx-2 mb-5"
@@ -18,10 +19,25 @@
                 <div class="col">
                     <div class="card h-100 shadow-lg">
                         <div class="card-body">
-                            <h5 class="card-title">{{ question.title }}</h5>
-                            <h6 class="text-muted mb-2">Level: {{ question.level }}</h6>
+                            <h4 class="card-title">{{ question.title }}</h4>
+                            <h5 class="text-muted mb-2">Level: {{ question.level }}</h5>
                             <p class="card-text">{{ question.description|truncatewords:20 }}</p>
-                            <a href="{% url 'question_sheet_id' question.id %}" class="btn btn-primary btn-lg w-100 mt-auto">Learn more</a>
+                            <div class="edit-inspect"
+                            style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            ">
+                                <a href="{% url 'question_sheet_by_id' question.id %}" class="btn btn-success btn-lg mt-auto"
+                                style="
+                                width: 45%;
+                                "
+                                >Edit</a>
+                                <a href="{% url 'question_sheet_by_id' question.id %}" class="btn btn-info btn-lg"
+                                style="
+                                width: 45%;
+                                ">Inspect</a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -7,13 +7,14 @@
                 <h1 class="display-4">Welcome to Digit Ilm</h1>
                 <h2 class="lead">Learn and Teach.</h2>
                 <div class="mt-4">
-                    {% if ok == 1 %}
-                        <a href="{% url 'home2' %}" class="btn btn-success btn-lg mx-2">Browse Questions</a>
+                    
+                    {% if user.is_authenticated %}
                         <a href="{% url 'create_question_sheet' %}" class="btn btn-primary btn-lg mx-2">Create Sheets</a>
+                        <a href="{% url 'explore-quizzes' %}" class="btn btn-success btn-lg mx-2">Browse Questions</a>
                         
                     {% else %}
-                        <a href="{% url 'home2' %}" class="btn btn-primary btn-lg mx-2">Browse Questions</a>
-                        <a href="{% url 'register-tutor' %}" class="btn btn-success btn-lg mx-2">Become a Tutor</a>
+                        <a href="{% url 'explore-quizzes' %}" class="btn btn-primary btn-lg mx-2">Browse Questions</a>
+                        <a href="{% url 'register' %}" class="btn btn-success btn-lg mx-2">Become a Tutor</a>
                     {% endif %}  
                 </div>
             </div>

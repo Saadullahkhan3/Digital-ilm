@@ -1,17 +1,32 @@
+from . import views
 
 from django.urls import path
-from . import views
 
 
 urlpatterns = [
-    path('', views.home2 , name="home2"),
-    path('<int:question_sheet_id>/', views.get_question_sheet_by_id, name="question_sheet_id"),
-    path('tutor/', views.RegisterTutor, name="register-tutor"),
+    # Explore Quizzes
+    path('', views.explore_quizzes , name="explore-quizzes"),
 
-    path('create-question-sheet/', views.create_question_sheet2, name='create_question_sheet'),
+    # Specific Question Sheet
+    path('<int:question_sheet_id>/', views.question_sheet_by_id, name="question_sheet_by_id"),
+
+    #Shayan Adnan,
+    # Define your leaderboard url here!
+    
+
+    # Registration
+    path('register/', views.tutor_register, name="register"),
+
+    # Extra confirmation page to prevent accidentle log out
+    path('confirm-logout/', views.confirm_logout, name="confirm-logout"),
+
+    # Initialze a Question Sheet form with one Question as default
+    path('create-question-sheet/', views.create_question_sheet, name='create_question_sheet'),
+    # [Internal Usage] Use to get Question form
     path('get-question-form/', views.get_question_form, name='get_question_form'),
 
-    path('tutor-ok/', views.after_tutor_register, name="tutor-ok")
-
+    # Todo: Change the url as saad/ tutor name not like tutor/
+    # Tutor Profile Page
+    path('tutor/', views.tutor_profile, name="tutor"),
 
 ]

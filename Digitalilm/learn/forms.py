@@ -15,11 +15,17 @@ class QuestionForm(forms.ModelForm):
 
 
 class TutorRegistrationForm(UserCreationForm):
+    name = forms.CharField(max_length=100)
     email = forms.EmailField()
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ("name", "username", "email", "password1", "password2")
         widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'id': 'name',
+                'placeholder': 'Enter name'
+            }),
             'username': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id': 'id_username',
