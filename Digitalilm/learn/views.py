@@ -146,6 +146,7 @@ def create_question_sheet(request):
                 question = form.save(commit=False)
                 question.question_sheet = question_sheet
                 question.save()
+            # Showing new created Question sheet 
             return redirect('question_sheet_by_id', question_sheet.id)
     else:
         question_sheet_form = QuestionSheetForm()
