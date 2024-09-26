@@ -37,7 +37,8 @@
                         <div class="options">
                             {% for option_key, option_value in question.options.items %}
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required>
+                                {% comment %} <input class="form-check-input" type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option_key }}" required> {% endcomment %}
+                                <input class="form-check-input" type="radio" name="{{ question.id }}" value="{{ option_key }}" required>
                                 <label class="form-check-label">{{ option_value }}</label>
                             </div>
                             {% endfor %}

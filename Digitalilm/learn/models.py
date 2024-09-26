@@ -66,7 +66,7 @@ class Question(models.Model):
         
         options = [option for option in (self.a, self.b, self.c, self.d) if option]
 
-        return {"question": self.question, "options": create_options_dict(options)}
+        return {"id": self.id, "question": self.question, "options": create_options_dict(options)}
 
 
 

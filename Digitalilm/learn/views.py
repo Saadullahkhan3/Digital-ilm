@@ -59,6 +59,11 @@ def question_sheet_by_id(request, question_sheet_id):
     if request.method == "POST":
         answers = extract_question_with_id(question_sheet)
         checked = check_answers(request, answers, question_sheet)
+        print(" ---------------------------------------------")
+        print("Answers", answers)
+        print(" ---------------------------------------------")
+        print("Checked", checked)
+        print(" ---------------------------------------------")
 
         # Shayan Adnan,
         # Create Leaderboard for specific question sheet that can be pass into redirect() but for this you need to define a url in learn/urls.py and keep that url(added by you) name 'leaderboard'
