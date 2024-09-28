@@ -8,11 +8,10 @@ urlpatterns = [
     path('', views.explore_quizzes , name="explore-quizzes"),
 
     # Specific Question Sheet
-    path('<int:question_sheet_id>/', views.question_sheet_by_id, name="question_sheet_by_id"),
+    path('<int:question_sheet_id>/sheet/', views.question_sheet_by_id, name="question_sheet_by_id"),
 
-    #Shayan Adnan,
-    # Define your leaderboard url here!
-    
+    # Leader board
+    path('<int:question_sheet_id>/leaderboard/', views.leaderboard_by_id, name="leaderboard_by_id"),    
 
     # Registration
     path('register/', views.tutor_register, name="register"),
@@ -22,11 +21,13 @@ urlpatterns = [
 
     # Initialze a Question Sheet form with one Question as default
     path('create-question-sheet/', views.create_question_sheet, name='create_question_sheet'),
+    path('<int:question_sheet_id>/delete/', views.delete_sheet, name="delete_sheet"),
+    path('<int:question_sheet_id>/edit/', views.edit_sheet, name="edit_sheet"),
+
     # [Internal Usage] Use to get Question form
     path('get-question-form/', views.get_question_form, name='get_question_form'),
 
     # Todo: Change the url as saad/ tutor name not like tutor/
     # Tutor Profile Page
     path('tutor/', views.tutor_profile, name="tutor"),
-
 ]

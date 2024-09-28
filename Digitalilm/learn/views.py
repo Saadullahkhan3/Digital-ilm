@@ -1,9 +1,9 @@
 from .models import QuestionSheet, Question, Student
 from .forms import TutorRegistrationForm, QuestionSheetForm, QuestionForm
 
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, formset_factory
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404 
 from django.contrib.auth import login
 
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 
 from django.contrib.auth.models import User 
 
+from pprint import pprint
 
 # ---------------- General -----------------
 def explore_quizzes(request):
@@ -51,7 +52,7 @@ def question_sheet_by_id(request, question_sheet_id):
     raw_question_sheet = QuestionSheet.objects.filter(id=question_sheet_id)
 
     if not raw_question_sheet:
-        return render(request, 'question_sheet.html', {"questions_found": 0})
+        return render(request, 'question_sheet.html', {"found": 0})
 
     # Re-assign to use it as normal when we confirm that this sheet is exists!
     question_sheet = raw_question_sheet[0]
@@ -59,15 +60,8 @@ def question_sheet_by_id(request, question_sheet_id):
     if request.method == "POST":
         answers = extract_question_with_id(question_sheet)
         checked = check_answers(request, answers, question_sheet)
-        print(" ---------------------------------------------")
-        print("Answers", answers)
-        print(" ---------------------------------------------")
-        print("Checked", checked)
-        print(" ---------------------------------------------")
 
-        # Shayan Adnan,
-        # Create Leaderboard for specific question sheet that can be pass into redirect() but for this you need to define a url in learn/urls.py and keep that url(added by you) name 'leaderboard'
-        return render(request, 'leaderboard.html', {"student": checked})
+        return redirect('leaderboard_by_id', {"student": checked})
     
     else:
         raw_questions = question_sheet.all_questions() 
@@ -75,6 +69,28 @@ def question_sheet_by_id(request, question_sheet_id):
         questions = [q.all() for q in raw_questions]
 
     return render(request, 'question_sheet.html', {"questions": questions, "sheet": question_sheet})
+
+
+def leaderboard_by_id(request, question_sheet_id):
+    # Use filter to prevernt not found error error!
+    raw_question_sheet = QuestionSheet.objects.filter(id=question_sheet_id)
+
+    if not raw_question_sheet:
+        return render(request, 'question_sheet.html', {"found": 0})
+
+    # Re-assign to use it as normal when we confirm that this sheet is exists!
+    question_sheet = raw_question_sheet[0]
+
+
+    students = Student.objects.filter(attempted_sheet=question_sheet.id)
+    pprint(students)
+    pprint(question_sheet.all_students())
+
+    return render(request, 'leaderboard.html', {"students": students})
+    
+
+    
+
 
 
 
@@ -119,16 +135,13 @@ def confirm_logout(request):
 # [INTERNAL USAGE]
 @login_required
 def get_question_form(request):
-    index = int(request.GET.get('index'))
-    
-    form = QuestionForm(prefix=index)
-    data = {
-        'html': render_to_string('question_form.html', {'form': form}),
-        'order': index + 1,  # Return the order of the question
-        'id': f"question-{index}"  # Return a unique id for the question
-    }
-    
-    return JsonResponse(data)
+    index = request.GET.get('index', 0)
+    QuestionFormSet = formset_factory(QuestionForm, extra=1)  # Create formset dynamically
+    form = QuestionFormSet().forms[0]  # Only get the first form
+
+    return JsonResponse({
+        'html': form.as_p().replace('id_form-0-', f'id_form-{index}-').replace('form-0-', f'form-{index}-')
+    })
 
 
 @login_required
@@ -163,42 +176,66 @@ def create_question_sheet(request):
     })
 
 
-# Shayan Adnan,
-# Create edit functionality for Question Sheet but keep in mind that we not used normal form we use form-factory which needed to be learn
-# this edit functionality should be available in tutor.html, change Edit button href attribute that looks like:
-# href="{% url 'question_sheet_by_id' question.id %}"
-# Get absolute hints by create_question_sheet() function that how it works!
 @login_required
-def edit_sheet(request):
-    if request.method == "POST":
-        pass
+def edit_sheet(request, question_sheet_id):
+    # Dynamically handle multiple questions
+    QuestionFormSet = modelformset_factory(Question, form=QuestionForm, extra=0, can_delete=True)  
+
+    _question_sheet = QuestionSheet.objects.get(id=question_sheet_id, tutor=request.user)
+    _questions = Question.objects.filter(question_sheet=_question_sheet.id)
+    if request.method == 'POST':
+        # pprint(dict(request.POST), indent=4)
+
+        question_sheet_form = QuestionSheetForm(request.POST, instance=_question_sheet)
+        formset = QuestionFormSet(request.POST, queryset=_questions)
+
+        if question_sheet_form.is_valid() and formset.is_valid():
+            # Save QuestionSheet instance(Not in Database)
+            question_sheet = question_sheet_form.save(commit=False)
+            question_sheet.save()
+            
+            # Save each question and link it to the question sheet
+            for form in formset:
+                if form.cleaned_data.get('DELETE'):  # Check if the form is marked for deletion
+                    if form.instance.pk:  # Check if the question already exists in the database
+                        form.instance.delete()  # Delete the question from the database
+                else:
+                    question = form.save(commit=False)  # Save the question
+                    question.question_sheet = question_sheet
+                    question.save()
+
+            # Showing new created Question sheet 
+            return redirect('question_sheet_by_id', question_sheet.id)
     else:
-        form = None 
-    return render(request, '')
+        question_sheet_form = QuestionSheetForm(instance=_question_sheet)
+        formset = QuestionFormSet(queryset=_questions)
+
+    return render(request, 'edit_sheet.html', {
+        'question_sheet_form': question_sheet_form,
+        'formset': formset,
+    })
 
 
+@login_required
+def delete_sheet(request, question_sheet_id):
+    found = 1
+    sheet = QuestionSheet.objects.filter(id=question_sheet_id, tutor=request.user)
+    if sheet:
+        if request.method == "POST":
+            sheet.delete()  
+            return redirect("tutor")
+    else:
+        found = 0
 
+    return render(request, 'confirm_sheet_delete.html', {"question_sheet_id": question_sheet_id, "found": found})
 
+    
+    
 
-
-
-
-
+    
 
 
    
 
 
         
-
-
-
-
-# def LoginTutor(request):
-#     if request.method == "POST":
-#         form = TutorRegistrationForm(request.POST)
-#         if form.is_valid():
-#             login(request, form)
-#     else:
-#         form = TutorRegistrationForm()
-#     return render(request, 'registration/login.html', {"form": form})

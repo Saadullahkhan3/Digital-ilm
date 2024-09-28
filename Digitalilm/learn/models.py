@@ -22,8 +22,8 @@ class QuestionSheet(models.Model):
     def all_questions(self):
         return self.questions.all()
     
-    def total_questions(self):
-        return len(self.all_questions)
+    def all_students(self):
+        return self.attempted_sheet.all()
 
     def __str__(self):
         return self.title

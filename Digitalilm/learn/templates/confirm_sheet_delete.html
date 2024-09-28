@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block body %}
+    {% if found == 0 %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center display-1 text-danger">404</h1>
+                <h2 class="card-title text-center display-3">Oops!</h2>
+                <h3 class=" text-center display-5 mt-5">Question Sheet is not found!</h3>
+                <h3 class=" text-center display-5 mt-5">Or Un-Authorized</h3>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    
+    <div class="container mt-5">
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Delete</h2>
+            </div>
+            
+            <div class="card-body">
+                <p class="display-5 mb-5">Do you really want to delete your sheet?</p>
+                <div class="card-body" 
+                style="
+                display: flex;
+                align-items: center;
+                ">
+                    <a href="{% url 'tutor' %}" class="btn btn-success btn-lg">Cancel</a>
+                    <form action="{% url 'delete_sheet' question_sheet_id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-danger btn-lg mx-4" type="submit">Delete</button>
+                        {% comment %} <button onclick="{% url 'delete_sheet'  %}" class="btn btn-danger btn-lg mx-4" type="submit">Delete</button> {% endcomment %}
+                    </form>
+                </div>                    
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -12,6 +12,26 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['question', 'answer', 'a', 'b', 'c', 'd']
+        # widgets = {
+        #     'question': forms.TextInput(attrs={
+        #         'name': 'form-puppo-1'
+        #     }),
+        #     'answer': forms.TextInput(attrs={
+        #         'name': 'form-puppo-2'
+        #     }),
+        #     'a': forms.TextInput(attrs={
+        #         'name': 'form-puppo-3'
+        #     }),
+        #     'b': forms.TextInput(attrs={
+        #         'name': 'form-puppo-4'
+        #     }),
+        #     'c': forms.TextInput(attrs={
+        #         'name': 'form-puppo-5'
+        #     }),
+        #     'd': forms.TextInput(attrs={
+        #         'name': 'form-puppo-6'
+        #     }),
+        # }
 
 
 class TutorRegistrationForm(UserCreationForm):

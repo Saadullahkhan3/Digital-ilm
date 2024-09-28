@@ -3,5 +3,32 @@
 {% block title %}Leaderboard{% endblock %}
 
 {% block body %}
-Your Name: {{ student.name }} and score is {{ student.score }}
+
+{% if found == 0 %}
+    {% comment %} <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center display-1 text-danger">404</h1>
+                <h2 class="card-title text-center display-3">Oops!</h2>
+                <h3 class=" text-center display-5 mt-5">Question Sheet is not found!</h3>
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+{% else %}
+    <div class="card">
+        <div class="card-body">
+            
+            Your Name: {{ student.name }} and score is {{ student.score }}
+            
+            {% for student in students %}
+            <p>
+                {{ student.name }} | {{ student.score }}
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endif %}
+
 {% endblock %}
