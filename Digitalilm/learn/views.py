@@ -3,7 +3,9 @@ from .forms import TutorRegistrationForm, QuestionSheetForm, QuestionForm
 
 from django.forms import modelformset_factory, formset_factory
 
-from django.shortcuts import render, redirect, get_object_or_404 
+from django.shortcuts import render, get_object_or_404, redirect
+
+from django.urls import reverse
 from django.contrib.auth import login
 
 from django.contrib.auth.decorators import login_required
@@ -59,9 +61,11 @@ def question_sheet_by_id(request, question_sheet_id):
 
     if request.method == "POST":
         answers = extract_question_with_id(question_sheet)
-        checked = check_answers(request, answers, question_sheet)
+        student = check_answers(request, answers, question_sheet)
 
-        return redirect('leaderboard_by_id', {"student": checked})
+        return redirect(reverse('leaderboard_by_id', kwargs={'question_sheet_id': question_sheet_id}) + f'?redirected=true&student={student.id}')
+
+        # return redirect('leaderboard_by_id', question_sheet_id, kwargs={"student":student})
     
     else:
         raw_questions = question_sheet.all_questions() 
@@ -82,16 +86,20 @@ def leaderboard_by_id(request, question_sheet_id):
     question_sheet = raw_question_sheet[0]
 
 
-    students = Student.objects.filter(attempted_sheet=question_sheet.id)
-    pprint(students)
-    pprint(question_sheet.all_students())
+    all_students = Student.objects.filter(attempted_sheet=question_sheet.id)
 
-    return render(request, 'leaderboard.html', {"students": students})
+    # Check if this request is a redirection after submission
+    redirected = request.GET.get('redirected', False)
     
+    _student_id = request.GET.get('student', None) 
+    student_id = int(_student_id) if _student_id.isdigit() else None 
 
+    # If redirected, fetch the student information
+    if redirected and student_id:
+        student = Student.objects.filter(id=student_id)
+
+    return render(request, 'leaderboard.html', {"student": student, "all_students": all_students, "redirected": redirected})
     
-
-
 
 
 # ---------------- Tutor -----------------
@@ -239,3 +247,6 @@ def delete_sheet(request, question_sheet_id):
 
 
         
+'''
+redirect war gaya
+'''
