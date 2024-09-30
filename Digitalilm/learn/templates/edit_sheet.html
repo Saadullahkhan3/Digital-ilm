@@ -19,7 +19,19 @@
             {% for form in formset %}
                 <div class="question-container border-bottom pb-3 mb-4">
                     {{ form.as_p }}
-                    <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
+                    {% comment %} <div class="form-check">
+                        <!-- Render the checkbox manually -->
+                        <input type="checkbox" class="form-check-input" id="{{ form.DELETE.id_for_label }}" name="{{ form.DELETE.html_name }}" style="transform: scale(1.5);">
+                        
+                        <!-- Render the label -->
+                        <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">
+                            Delete
+                        </label>
+                        
+                    </div>
+                     {% endcomment %}
+
+                    {% comment %} <button type="button" class="remove-question btn btn-danger float-right">Remove</button> {% endcomment %}
                 </div>
             {% endfor %}
             <div id="additional-questions"></div>
@@ -29,9 +41,9 @@
         <button type="submit" class="btn btn-success mt-4">Submit</button>
     </form>
 </div>
-{% endblock %}
 
-{% block script %}
+
+<!-- =========== JavaScript  =============== -->
 <script>
     $(document).ready(function() {
         var questionIndex = {{ formset.total_form_count }};  // Start from the current number of forms
@@ -80,7 +92,5 @@
         }
     });
 </script>
-
-
 
 {% endblock %}

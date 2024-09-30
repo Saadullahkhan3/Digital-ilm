@@ -15,7 +15,7 @@
           {% comment %} <!-- First Scenario: Show the current user in a separate card if redirected --> {% endcomment %}
           {% if redirected and student %}
           <div class="card mb-4">
-              <div class="card-body">
+              <div class="card-body shadow">
                   <h2 class="text-center">You</h2>
                   <div class="mx-4"
                        style="
@@ -24,7 +24,7 @@
                        justify-content: space-between;
                        ">
                       <h3 class="mt-2 mr-2">
-                          {{ student.name }}
+                          {{ student.id }} | {{ student.name }}
                       </h3>
                       <span class="" 
                             style="
@@ -36,6 +36,16 @@
                           {{ student.score }}
                       </h4>
                   </div>
+
+                <!-- URL Display and Copy Button -->
+                <div class="input-group mt-3">
+                    <input type="text" class="form-control" id="achievementUrl" value="{{ request.build_absolute_uri }}" readonly>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" id="copyUrlBtn">Copy URL</button>
+                    </div>
+                </div>
+                <p class="text-success mt-2" id="copySuccessMessage" style="display: none;">URL Copied!</p>
+
               </div>
           </div>
           {% endif %}
@@ -49,7 +59,7 @@
                justify-content: space-between;
                ">
               <h3 class="mt-2 mr-2">
-                  {{ student.name }}
+                {{ student.id }} | {{ student.name }}
               </h3>
               <span class="" 
                     style="
@@ -66,5 +76,24 @@
   </div>
 </div>
 
+<!-- =========== JavaScript  =============== -->
+<!-- JavaScript to Copy URL -->
+<script>
+    document.getElementById('copyUrlBtn').addEventListener('click', function() {
+        // Select the input field
+        const urlField = document.getElementById('achievementUrl');
+        urlField.select();
+        urlField.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the input field
+        document.execCommand('copy');
+
+        // Show success message
+        document.getElementById('copySuccessMessage').style.display = 'block';
+        setTimeout(function() {
+            document.getElementById('copySuccessMessage').style.display = 'none';
+        }, 2000);
+    });
+</script>
     
 {% endblock %}

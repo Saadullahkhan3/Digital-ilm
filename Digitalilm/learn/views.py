@@ -63,7 +63,7 @@ def question_sheet_by_id(request, question_sheet_id):
         answers = extract_question_with_id(question_sheet)
         student = check_answers(request, answers, question_sheet)
 
-        return redirect(reverse('leaderboard_by_id', kwargs={'question_sheet_id': question_sheet_id}) + f'?redirected=true&student={student.id}')
+        return redirect(reverse('leaderboard_by_id', kwargs={'question_sheet_id': question_sheet_id}) + f'?redirected=true&student_id={student.id}')
 
         # return redirect('leaderboard_by_id', question_sheet_id, kwargs={"student":student})
     
@@ -85,18 +85,20 @@ def leaderboard_by_id(request, question_sheet_id):
     # Re-assign to use it as normal when we confirm that this sheet is exists!
     question_sheet = raw_question_sheet[0]
 
-
     all_students = Student.objects.filter(attempted_sheet=question_sheet.id)
 
     # Check if this request is a redirection after submission
     redirected = request.GET.get('redirected', False)
     
-    _student_id = request.GET.get('student', None) 
+    _student_id: str = request.GET.get('student_id', "") 
     student_id = int(_student_id) if _student_id.isdigit() else None 
 
+    student = None
     # If redirected, fetch the student information
     if redirected and student_id:
-        student = Student.objects.filter(id=student_id)
+        # Check that provided id of student exists and also related to provided sheet to prevent irrelevant relationship
+        _student = Student.objects.filter(id=student_id, attempted_sheet=question_sheet.id)
+        student = _student[0] if _student else None
 
     return render(request, 'leaderboard.html', {"student": student, "all_students": all_students, "redirected": redirected})
     
@@ -104,7 +106,6 @@ def leaderboard_by_id(request, question_sheet_id):
 
 # ---------------- Tutor -----------------
 def tutor_register(request):
-
     if request.method == "POST":
         form = TutorRegistrationForm(request.POST)
         if form.is_valid():
@@ -123,13 +124,13 @@ def tutor_profile(request):
     # tutor = get_object_or_404(User, id=request.user.id)
     tutor = User.objects.get(id=request.user.id)
 
-    sheets = QuestionSheet.objects.filter(tutor=tutor.id)
+    questions_sheet = QuestionSheet.objects.filter(tutor=tutor.id)
 
-    if not sheets.exists():
+    if not questions_sheet.exists():
         # Handle the case where no sheets are found
         pass
 
-    return render(request, 'tutor.html', {"tutor": tutor, "questions": sheets})
+    return render(request, 'tutor.html', {"tutor": tutor, "questions_sheet": questions_sheet})
 
 
 @login_required

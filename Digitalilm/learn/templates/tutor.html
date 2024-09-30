@@ -15,12 +15,12 @@
         ">Create Sheet</a>
 
         <div class="row g-4">
-            {% for question in questions %}
+            {% for question_sheet in questions_sheet %}
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                     <div class="card h-100 shadow-lg">
                         <div class="card-body">
-                            <h4 class="card-title">{{ question.title }}</h4>
-                            <h5 class="text-muted mb-2">Level: {{ question.level }}</h5>
+                            <h4 class="card-title"><a href="{% url 'question_sheet_by_id' question_sheet.id %}">{{ question_sheet.title }}</a></h4>
+                            <h5 class="text-muted mb-2">Level: {{ question_sheet.level }}</h5>
 
                             <div class="edit-delete"
                             style="
@@ -28,12 +28,12 @@
                             align-items: center;
                             justify-content: space-between;
                             ">
-                                <a href="{% url 'edit_sheet' question.id %}" class="btn btn-success btn-lg mt-auto"
+                                <a href="{% url 'edit_sheet' question_sheet.id %}" class="btn btn-success btn-lg mt-auto"
                                 style="
                                 width: 45%;
                                 "
                                 >Edit</a>
-                                <a href="{% url 'delete_sheet' question.id %}" class="btn btn-info btn-lg"
+                                <a href="{% url 'delete_sheet' question_sheet.id %}" class="btn btn-info btn-lg"
                                 style="
                                 width: 45%;
                                 ">Delete</a>
