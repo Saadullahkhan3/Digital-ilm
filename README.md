@@ -22,10 +22,11 @@ Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed t
 
 ## **Installation**
 
-### Virtual Environment:
 - `Python` 3 or higher: This project is developed in `Python 3.12.5`
 
-_Virtual Environment is recommended_
+_Virtual Environment is recommended!_
+### Virtual Environment:
+
 - Create: `python -m venv .venv`
 - Activate: 
     - Windows: `.venv\Scripts\activate`
