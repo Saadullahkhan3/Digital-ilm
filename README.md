@@ -20,6 +20,33 @@ Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed t
 
 ---
 
+## **Installation**
+
+### Virtual Environment:
+- `Python` 3 or higher: This project is developed in `Python 3.12.5`
+
+_Virtual Environment is recommended_
+- Create: `python -m venv .venv`
+- Activate: 
+    - Windows: `.venv\Scripts\activate`
+    - Unix(Mac/Linux): `source .venv/bin/activate`
+- Install **Django**: `pip install django==4.1.13`
+- Deactivate(if no need): `deactivate`
+
+### Setup Digital ilm:
+- Clone this repository: `git clone https://github.com/Saadullahkhan3/Digital-ilm.git`
+- Open terminal in the same directory, where repo was cloned.
+- Activate virtual environment.
+- Change path into cloned repository directory: `cd Digital-ilm`
+- Change path into Django project: `cd Digitalilm`
+- Migrate: `python manage.py migrate`
+- Start server: `python manage.py runserver`
+
+### Accessing the App
+- Navigate to `http://localhost:8000/` in your browser to ensure the server is running properly.
+
+---
+
 ## **User Roles**
 ### Tutor
 - Tutors can:
@@ -56,11 +83,11 @@ Represents individual questions in a question sheet.
 - **Fields:**
     - `question`: The text of the question.
     - `answer`: The correct answer (choices: 'a', 'b', 'c', 'd').
-    - `a`, `b`, `c`, `d`: The options for the question.
+    - `a`, `b`, `c`, `d`: The options `a` and `b` are mandatory, while `c` and `d` are optional. This allows for flexibility in providing either **2**, **3**, or **4** answer choices.
 
 - **Methods:**
     - `answer_with_id()`: Returns the answer along with the question ID.
-    - `all()`: Returns a dictionary containing the question and its options.
+    - `all()`: Returns a dictionary containing the question text, all option values, and the correct option.
 
 ### Student
 Represents a student who attempts a question sheet.
@@ -112,30 +139,6 @@ Represents a student who attempts a question sheet.
 
 **Internal Utility Endpoints**
 - `'get-question-form/'`: AJAX endpoint for dynamically adding question forms.
-
----
-
-## **Installation**
-
-### Virtual Environment:
-_Virtual Environment is recommended_
-- Create: `python -m venv .venv`
-- Activate: 
-    - Windows: `.venv\Scripts\activate`
-    - Unix(Mac/Linux): `source .venv/bin/activate`
-- Install **Django**: `pip install django`
-- Deactivate: `deactivate`
-
-### Setup Digital ilm:
-- Clone this repository: `git clone https://github.com/Saadullahkhan3/Digital-ilm.git`
-- Open terminal in the same directory, where repo was cloned.
-- Activate virtual environment.
-- Change path into cloned repository directory: `cd Digital-ilm`
-- Change path into Django project: `cd Digitalilm`
-- Start server: `python manage.py runserver`
-
-**Use it**
-- Navigate to `http://localhost:8000/` in your browser to ensure the server is running properly.
 
 ---
 
