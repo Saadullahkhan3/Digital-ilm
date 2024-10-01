@@ -7,8 +7,9 @@ urlpatterns = [
     # Explore Quizzes
     path('', views.explore_quizzes , name="explore-quizzes"),
 
-    # Specific Question Sheet
-    path('<int:question_sheet_id>/sheet/', views.question_sheet_by_id, name="question_sheet_by_id"),
+    # Specific Question Sheet, below both are same, just url name different!
+    path('<int:question_sheet_id>/', views.question_sheet_by_id, name="question_sheet"),    # When only question id typed
+    path('<int:question_sheet_id>/sheet/', views.question_sheet_by_id, name="question_sheet_by_id"),    # When sheet/ is typed
 
     # Leader board
     path('<int:question_sheet_id>/leaderboard/', views.leaderboard_by_id, name="leaderboard_by_id"),    
