@@ -1,6 +1,6 @@
 # Digital Ilm
 
-Learn effortlessly—no login required for students to attempt quizzes, just a name and a time limit. Ideal for quick tests or environments where authentication is an issue, such as classrooms. Only tutors need to authenticate.
+Learn effortlessly—no login required for students to attempt quizzes, just a name. Ideal for quick tests or environments where authentication is an issue, such as classrooms. Only tutors need to authenticate.
 
 Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed to facilitate seamless interaction between tutors and students. It simplifies the process of submitting, answering, and reviewing questions while focusing on user-friendly functionality.
 
@@ -88,7 +88,7 @@ Represents individual questions in a question sheet.
 
 - **Methods:**
     - `answer_with_id()`: Returns the answer along with the question ID.
-    - `all()`: Returns a dictionary containing the question text, all option values, and the correct option.
+    - `all()`: Returns a dictionary containing the question id, question text, all available option values, and the correct option.
 
 ### Student
 Represents a student who attempts a question sheet.
@@ -109,7 +109,7 @@ Represents a student who attempts a question sheet.
 - The student’s score is calculated and saved.
 
 ### Leaderboard
-- Anyone can view students' names and their scores after attempting a quiz.
+- Anyone can view students' names and their scores for any specific question sheet.
 - Students who are redirected after completing a question sheet have their result displayed at the top of the leaderboard with a special card and a shareable URL.
 
 ### Tutor Profile
@@ -123,6 +123,8 @@ Represents a student who attempts a question sheet.
 - `'learn/'`: Explore quizzes page.
 
 ### Question Sheet
+_Two different URLs but same work_
+- `'/<int:question_sheet_id>/'`: Displays a specific question sheet by ID.
 - `'/<int:question_sheet_id>/sheet/'`: Displays a specific question sheet by ID.
 
 ### Leaderboard
