@@ -72,7 +72,7 @@ def question_sheet_by_id(request, question_sheet_id):
 
         questions = [q.all() for q in raw_questions]
 
-    return render(request, 'question_sheet.html', {"questions": questions, "sheet": question_sheet})
+    return render(request, 'question_sheet.html', {"question_sheet": question_sheet, "questions": questions})
 
 
 def leaderboard_by_id(request, question_sheet_id):
@@ -100,7 +100,7 @@ def leaderboard_by_id(request, question_sheet_id):
         _student = Student.objects.filter(id=student_id, attempted_sheet=question_sheet.id)
         student = _student[0] if _student else None
 
-    return render(request, 'leaderboard.html', {"student": student, "all_students": all_students, "redirected": redirected})
+    return render(request, 'leaderboard.html', {"question_sheet": question_sheet, "student": student, "all_students": all_students, "redirected": redirected})
     
 
 
