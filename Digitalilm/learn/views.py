@@ -3,19 +3,19 @@ from .forms import TutorRegistrationForm, QuestionSheetForm, QuestionForm
 
 from django.forms import modelformset_factory, formset_factory
 
-from django.shortcuts import render, get_object_or_404, redirect
-
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth import login
 
+from django.contrib.auth.models import User 
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
 from django.http import JsonResponse
-from django.template.loader import render_to_string
-
-from django.contrib.auth.models import User 
 
 from pprint import pprint
+
+
+
 
 # ---------------- General -----------------
 def explore_quizzes(request):
@@ -140,7 +140,6 @@ def confirm_logout(request):
 
 
 # ---------------- Question Sheet ------------------
-
 # [INTERNAL USAGE]
 @login_required
 def get_question_form(request):
@@ -241,13 +240,3 @@ def delete_sheet(request, question_sheet_id):
     
     
 
-    
-
-
-   
-
-
-        
-'''
-redirect war gaya
-'''

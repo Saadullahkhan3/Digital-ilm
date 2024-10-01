@@ -1,23 +1,40 @@
 {% extends "layout.html" %}
 
-{% block title %}Digital ilm{% endblock %}
+{% block title %}Digital Ilm{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6 text-center">
                 <h1 class="display-4">Welcome to Digital Ilm</h1>
-                <h2 class="lead">Learn and Teach.</h2>
+                <h2 class="lead">Learn and Teach with Ease</h2>
+                <p class="mt-3">
+                    Digital Ilm is a platform for quick, no-hassle quiz creation and participation. Tutors can create multiple-choice question sheets, and students can attempt them without needing to log in. Perfect for classrooms, quick tests, and self-assessment!
+                </p>
                 <div class="mt-4">
-                    
                     {% if user.is_authenticated %}
                         <a href="{% url 'create_question_sheet' %}" class="btn btn-primary btn-lg mx-2">Create Sheets</a>
                         <a href="{% url 'explore-quizzes' %}" class="btn btn-success btn-lg mx-2">Browse Questions</a>
-                        
                     {% else %}
                         <a href="{% url 'explore-quizzes' %}" class="btn btn-primary btn-lg mx-2">Browse Questions</a>
                         <a href="{% url 'register' %}" class="btn btn-success btn-lg mx-2">Become a Tutor</a>
                     {% endif %}  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="part2" class="container mt-5">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h3 class="card-title">Contribute or Explore More</h3>
+                <p class="card-text">You can find the full project code on GitHub. Explore more details about how Digital Ilm works!</p>
+                <a href="https://github.com/Saadullahkhan3/Digital-ilm"  target="blank" class="btn btn-dark btn-lg">GitHub</a>
+                
+                <h3 class="card-title mt-4">Contributors</h3>
+                <div class="text-center">
+                    <a href="https://www.linkedin.com/in/saadullahkhan3/" target="blank" class="btn btn-success btn-lg mx-2">Saadullah Khan</a>
+                    <a href="https://www.linkedin.com/in/shayan-adnan-29a1102a5/"  target="blank" class="btn btn-success btn-lg mx-2">Shayan Adnan</a>
                 </div>
             </div>
         </div>
