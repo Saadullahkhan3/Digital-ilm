@@ -20,13 +20,13 @@ urlpatterns = [
     # Extra confirmation page to prevent accidentle log out
     path('confirm-logout/', views.confirm_logout, name="confirm-logout"),
 
-    # Initialze a Question Sheet form with one Question as default
+    # Question Sheet form with Question
     path('create-question-sheet/', views.create_question_sheet, name='create_question_sheet'),
     path('<int:question_sheet_id>/delete/', views.delete_sheet, name="delete_sheet"),
     path('<int:question_sheet_id>/edit/', views.edit_sheet, name="edit_sheet"),
 
     # [Internal Usage] Use to get Question form
-    path('get-question-form/', views.get_question_form, name='get_question_form'),
+    path('get-question-form/', views._get_question_form, name='get_question_form'),
 
     # Todo: Change the url as saad/ tutor name not like tutor/
     # Tutor Profile Page

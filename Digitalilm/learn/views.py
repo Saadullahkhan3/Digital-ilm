@@ -142,7 +142,7 @@ def confirm_logout(request):
 # ---------------- Question Sheet ------------------
 # [INTERNAL USAGE]
 @login_required
-def get_question_form(request):
+def _get_question_form(request):
     index = request.GET.get('index', 0)
     QuestionFormSet = formset_factory(QuestionForm, extra=1)  # Create formset dynamically
     form = QuestionFormSet().forms[0]  # Only get the first form
@@ -151,8 +151,8 @@ def get_question_form(request):
         'html': form.as_p().replace('id_form-0-', f'id_form-{index}-').replace('form-0-', f'form-{index}-')
     })
 
-
-def get_forms_data(request):
+# [INTERNAL USAGE]
+def _get_forms_data(request):
     forms = list()
     total = int(request.POST.get("form-TOTAL_FORMS"), 0)
 
@@ -167,10 +167,23 @@ def get_forms_data(request):
 
     return forms
 
+# [INTERNAL USAGE]
+def _assign_values_to_question(question, form, question_sheet):
+    question.question = form["question"]
+    question.answer = form["answer"]
+    question.question_sheet = question_sheet
+    question.a = form["a"]
+    question.b = form["b"]
+    question.c = form["c"]
+    question.d = form["d"]
+    question.a = form["a"]
+    
+    return question
 
-def manage_question_from_request(request, question_sheet): 
+# [INTERNAL USAGE]
+def _manage_question_from_request(request, question_sheet): 
     # Save each question and link it to the question sheet
-    for form in get_forms_data(request):
+    for form in _get_forms_data(request):
 
         _id = form.get("id", False)
 
@@ -185,28 +198,14 @@ def manage_question_from_request(request, question_sheet):
             # Already exsits question, that were edited
             if _id:
                 question = Question.objects.get(id=_id)
-                question = assign_values_to_question(question, form, question_sheet)
+                question = _assign_values_to_question(question, form, question_sheet)
                 question.save()
             
             # New question added, that were created
             else:
                 question = Question()
-                question = assign_values_to_question(question, form, question_sheet)
+                question = _assign_values_to_question(question, form, question_sheet)
                 question.save()
-
-
-def assign_values_to_question(question, form, question_sheet):
-    question.question = form["question"]
-    question.answer = form["answer"]
-    question.question_sheet = question_sheet
-    question.a = form["a"]
-    question.b = form["b"]
-    question.c = form["c"]
-    question.d = form["d"]
-    question.a = form["a"]
-    
-    return question
-
 
 
 @login_required
@@ -224,7 +223,7 @@ def create_question_sheet(request):
             question_sheet.tutor = request.user 
             question_sheet.save()
 
-            manage_question_from_request(request, question_sheet)
+            _manage_question_from_request(request, question_sheet)
 
             return redirect('question_sheet_by_id', question_sheet.id)
     else:
@@ -255,7 +254,7 @@ def edit_sheet(request, question_sheet_id):
             question_sheet.save()
             
             # Utility that handle all the question work
-            manage_question_from_request(request, question_sheet)
+            _manage_question_from_request(request, question_sheet)
 
             # Showing new created Question sheet 
             return redirect('question_sheet_by_id', question_sheet.id)
