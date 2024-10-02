@@ -32,14 +32,18 @@
 <!-- =========== JavaScript  =============== -->
 <script>
     $(document).ready(function() {
-        var questionIndex = {{ formset.total_form_count }};
-        
+        var questionIndex = {{ formset.total_form_count }};  // Start from the current number of forms
+        console.log("Initial questionIndex: ", questionIndex);
+
         // Remove question event handler
         $(document).on('click', '.remove-question', function() {
             $(this).parent('.question-container').remove();
-            updateQuestionNumbers();
+            questionIndex--;
+            $('#id_form-TOTAL_FORMS').val(questionIndex);  // Update the form-TOTAL_FORMS hidden input
+            console.log("Question removed, new questionIndex: ", questionIndex);
+            updateQuestionNumbers(); 
         });
-        
+
         // Add question event handler
         $('#add-question').click(function() {
             $.ajax({
@@ -49,24 +53,28 @@
                 success: function(data) {
                     var html = `
                         <div class="question-container border-bottom pb-3 mb-4">
-                            ${data.html}
+                            ${data.html.replace(/__prefix__/g, questionIndex)}  <!-- Replace prefix -->
                             <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
                         </div>
                     `;
                     $('#additional-questions').append(html);
                     questionIndex++;
+                    $('#id_form-TOTAL_FORMS').val(questionIndex);  // Update form-TOTAL_FORMS
+                    console.log("New question added, updated questionIndex: ", questionIndex);
                     updateQuestionNumbers();
                 },
                 error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
+                    console.error("Error adding new question:", xhr.responseText);
                 }
             });
         });
-        
+
+        // Update question numbers after adding/removing
         function updateQuestionNumbers() {
             $('.question-container').each(function(index, element) {
                 $(element).find('h4').text('Question ' + (index + 1));
             });
+            console.log("Question numbers updated");
         }
     });
 </script>

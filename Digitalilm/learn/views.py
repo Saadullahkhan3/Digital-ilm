@@ -152,6 +152,63 @@ def get_question_form(request):
     })
 
 
+def get_forms_data(request):
+    forms = list()
+    total = int(request.POST.get("form-TOTAL_FORMS"), 0)
+
+    for index in range(total+1):
+        l = {k.replace(f"form-{index}-", ""): v for k, v in request.POST.items() if k.startswith(f"form-{index}")}
+
+        if not l:
+            continue
+
+        index += 1
+        forms.append(l)
+
+    return forms
+
+
+def manage_question_from_request(request, question_sheet): 
+    # Save each question and link it to the question sheet
+    for form in get_forms_data(request):
+
+        _id = form.get("id", False)
+
+        if form.get('DELETE', False) and _id:  # Check if the form is marked for deletion
+            question = Question.objects.filter(id=_id)
+
+            if question:
+                question.delete()
+            continue
+
+        else:
+            # Already exsits question, that were edited
+            if _id:
+                question = Question.objects.get(id=_id)
+                question = assign_values_to_question(question, form, question_sheet)
+                question.save()
+            
+            # New question added, that were created
+            else:
+                question = Question()
+                question = assign_values_to_question(question, form, question_sheet)
+                question.save()
+
+
+def assign_values_to_question(question, form, question_sheet):
+    question.question = form["question"]
+    question.answer = form["answer"]
+    question.question_sheet = question_sheet
+    question.a = form["a"]
+    question.b = form["b"]
+    question.c = form["c"]
+    question.d = form["d"]
+    question.a = form["a"]
+    
+    return question
+
+
+
 @login_required
 def create_question_sheet(request):
     # Dynamically handle multiple questions
@@ -167,12 +224,8 @@ def create_question_sheet(request):
             question_sheet.tutor = request.user 
             question_sheet.save()
 
-            # Save each question and link it to the question sheet
-            for form in formset:
-                question = form.save(commit=False)
-                question.question_sheet = question_sheet
-                question.save()
-            # Showing new created Question sheet 
+            manage_question_from_request(request, question_sheet)
+
             return redirect('question_sheet_by_id', question_sheet.id)
     else:
         question_sheet_form = QuestionSheetForm()
@@ -192,7 +245,6 @@ def edit_sheet(request, question_sheet_id):
     _question_sheet = QuestionSheet.objects.get(id=question_sheet_id, tutor=request.user)
     _questions = Question.objects.filter(question_sheet=_question_sheet.id)
     if request.method == 'POST':
-        # pprint(dict(request.POST), indent=4)
 
         question_sheet_form = QuestionSheetForm(request.POST, instance=_question_sheet)
         formset = QuestionFormSet(request.POST, queryset=_questions)
@@ -202,15 +254,8 @@ def edit_sheet(request, question_sheet_id):
             question_sheet = question_sheet_form.save(commit=False)
             question_sheet.save()
             
-            # Save each question and link it to the question sheet
-            for form in formset:
-                if form.cleaned_data.get('DELETE'):  # Check if the form is marked for deletion
-                    if form.instance.pk:  # Check if the question already exists in the database
-                        form.instance.delete()  # Delete the question from the database
-                else:
-                    question = form.save(commit=False)  # Save the question
-                    question.question_sheet = question_sheet
-                    question.save()
+            # Utility that handle all the question work
+            manage_question_from_request(request, question_sheet)
 
             # Showing new created Question sheet 
             return redirect('question_sheet_by_id', question_sheet.id)
