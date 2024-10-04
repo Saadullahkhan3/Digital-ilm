@@ -4,6 +4,8 @@ Learn effortlessly—no login required for students to attempt quizzes, just a n
 
 Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed to facilitate seamless interaction between tutors and students. It simplifies the process of submitting, answering, and reviewing questions while focusing on user-friendly functionality.
 
+> Watch Demo video on Youtube: [Digital ilm - Demo](https://youtu.be/ALe6aF5nnGM?si=GEYBr4AFiNU26pZ2)
+
 ---
 
 ## **Features**
