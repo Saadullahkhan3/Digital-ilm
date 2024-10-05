@@ -1,4 +1,4 @@
-# Digital Ilm
+# 📖 Digital Ilm
 
 Learn effortlessly—no login required for students to attempt quizzes, just a name. Ideal for quick tests or environments where authentication is an issue, such as classrooms. Only tutors need to authenticate.
 
@@ -59,7 +59,7 @@ _Virtual Environment is recommended!_
 
 ---
 
-## **User Roles**
+## 🧩 **User Roles**
 ### Tutor
 - Tutors can:
     - Register an account.
@@ -76,7 +76,7 @@ _Virtual Environment is recommended!_
 
 ---
 
-## **Model Descriptions**
+## 🧩 **Model Descriptions**
 ### QuestionSheet
 Represents a sheet containing multiple questions.
 
@@ -111,7 +111,7 @@ Represents a student who attempts a question sheet.
 
 ---
 
-## **Key Views and Functionalities**
+## 🧩 **Key Views and Functionalities**
 ### Explore Quizzes
 - Allows users to browse and select question sheets to attempt.
 
@@ -128,7 +128,7 @@ Represents a student who attempts a question sheet.
 
 ---
 
-## **URLs**
+## 🧩 **URLs**
 ### General
 - `'/'`: Home page.
 - `'learn/'`: Explore quizzes page.
@@ -156,9 +156,9 @@ _Two different URLs but same work_
 
 ---
 
-> Made with kindness through the collaboration of Saadullah Khan and Shayan Adnan.
+> Made with kindness through the collaboration of Saadullah Khan and Shayan Adnan. 🙌
 
 ---
 
-<h2 id="saadullah-khan"><a href="https://www.linkedin.com/in/saadullahkhan3/">Saadullah Khan</a></h2>
-<h2 id="shayan-adnan"><a href="https://www.linkedin.com/in/shayan-adnan-29a1102a5/">Shayan Adnan</a></h2>
+<h2 id="saadullah-khan"><a href="https://www.linkedin.com/in/saadullahkhan3/">🔗 Saadullah Khan</a></h2>
+<h2 id="shayan-adnan"><a href="https://www.linkedin.com/in/shayan-adnan-29a1102a5/">🔗 Shayan Adnan</a></h2>
