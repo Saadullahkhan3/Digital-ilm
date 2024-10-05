@@ -8,7 +8,7 @@ Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed t
 
 ---
 
-## **Features**
+## 🌟 **Features**
 **1. MCQ Platform**
 
 - **Tutor-side:** Tutors can submit question sheets for students to attempt.
@@ -22,7 +22,7 @@ Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed t
 
 ---
 
-### **Tech Stack:**
+### 💻 **Tech Stack:**
 - Python
 - Django
 - HTML
@@ -31,7 +31,7 @@ Digital Ilm is a Django-based multiple-choice question (MCQ) platform designed t
 - JavaScript | AJAX
 - Git & GitHub
   
-## **Installation**
+## 🛠️ **Installation**
 
 - `Python` 3 or higher: This project is developed in `Python 3.12.5`
 
