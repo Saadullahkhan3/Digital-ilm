@@ -1,7 +1,8 @@
-{% load bootstrap4 %}
+{% load static %}
+{% comment %} {% load bootstrap4 %}
 {# Load CSS and JavaScript #}
 {% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+{% bootstrap_javascript jquery='full' %} {% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,8 +13,9 @@
     {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" /> {% endcomment %}
     {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> {% endcomment %}
     {% comment %} <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> {% endcomment %}
-    
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     {% block css_file_name %}{% endblock %}
+    <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
     {% comment %} <link rel="stylesheet" href="{%{% block css_file_name %}{% endblock %}%}"> {% endcomment %}
     <title>{% block title %}MCQ's{% endblock %}</title>
     <style>
@@ -69,7 +71,7 @@
                     <a href="{% url 'home' %}" class="btn btn-primary btn-lg mx-2">Home</a>
                     <a href="{% url 'explore-quizzes' %}" class="btn btn-primary btn-lg mx-2">Explore Quizzess</a>
                 </div>
-
+                
                 <div class="nav-center">
                     <h1 class="title">Digital ilm</h1>
                 </div>
@@ -93,8 +95,13 @@
 </div>
 {% endblock %}
 
-
-
 {% block body %}{% endblock %}
+
+
+    <!-- Link local jQuery first -->
+
+    {% comment %} <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script> {% endcomment %}
+    <!-- Link local Bootstrap JS -->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

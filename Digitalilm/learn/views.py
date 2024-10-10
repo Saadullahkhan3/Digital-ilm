@@ -253,7 +253,7 @@ def edit_sheet(request, question_sheet_id):
     if request.method == 'POST':
 
         question_sheet_form = QuestionSheetForm(request.POST, instance=_question_sheet)
-        # formset = QuestionFormSet(request.POST, queryset=_questions)
+        formset = QuestionFormSet(request.POST, queryset=_questions)
 
         if question_sheet_form.is_valid() and formset.is_valid():
             # Save QuestionSheet instance(Not in Database)

@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container mt-5">
         <h1 class="display-1 text-center mb-3">{{ tutor.username}}</h1>
-        <h3 class="text-center text-center fw-light">{{ tutor.date_joined|date:"d-M-Y" }}</h3>
+        <h3 class="text-center fw-light">{{ tutor.date_joined|date:"d-M-Y" }}</h3>
         <h2 class="display-4 text-center mb-5">What you done;</h2>
 
         <a href="{% url 'create_question_sheet' %}" 
