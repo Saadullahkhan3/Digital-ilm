@@ -241,12 +241,19 @@ def edit_sheet(request, question_sheet_id):
     # Dynamically handle multiple questions
     QuestionFormSet = modelformset_factory(Question, form=QuestionForm, extra=0, can_delete=True)  
 
-    _question_sheet = QuestionSheet.objects.get(id=question_sheet_id, tutor=request.user)
+    _question_sheet = QuestionSheet.objects.filter(id=question_sheet_id, tutor=request.user)
+
+    if not _question_sheet:
+        return render(request, 'edit_sheet.html', {"found": 0})
+
+    # Accessing question sheet object when it found
+    _question_sheet = _question_sheet[0]
+
     _questions = Question.objects.filter(question_sheet=_question_sheet.id)
     if request.method == 'POST':
 
         question_sheet_form = QuestionSheetForm(request.POST, instance=_question_sheet)
-        formset = QuestionFormSet(request.POST, queryset=_questions)
+        # formset = QuestionFormSet(request.POST, queryset=_questions)
 
         if question_sheet_form.is_valid() and formset.is_valid():
             # Save QuestionSheet instance(Not in Database)
