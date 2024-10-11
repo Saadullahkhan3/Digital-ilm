@@ -43,7 +43,7 @@ _Virtual Environment is recommended!_
 - Activate: 
     - Windows: `.venv\Scripts\activate`
     - Unix(Mac/Linux): `source .venv/bin/activate`
-- Install **Django**: `pip install django==4.1.13`
+- Install **Django**: `pip install -r requirements.txt`
 - Deactivate(when no longer needed): `deactivate`
 
 ### Setup Digital ilm:
