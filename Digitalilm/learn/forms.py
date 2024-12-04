@@ -14,23 +14,23 @@ class QuestionForm(forms.ModelForm):
         fields = ['question', 'answer', 'a', 'b', 'c', 'd']
         # widgets = {
         #     'question': forms.TextInput(attrs={
-        #         'name': 'form-puppo-1'
+        #         'name': 'form-control'
         #     }),
         #     'answer': forms.TextInput(attrs={
-        #         'name': 'form-puppo-2'
+        #         'class': 'form-control'
         #     }),
         #     'a': forms.TextInput(attrs={
-        #         'name': 'form-puppo-3'
+        #         'class': 'form-control'
         #     }),
         #     'b': forms.TextInput(attrs={
-        #         'name': 'form-puppo-4'
+        #         'class': 'form-control'
         #     }),
         #     'c': forms.TextInput(attrs={
-        #         'name': 'form-puppo-5'
+        #         'class': 'form-control'
         #     }),
         #     'd': forms.TextInput(attrs={
-        #         'name': 'form-puppo-6'
-        #     }),
+        #         'class': 'form-control'
+        #     })
         # }
 
 
@@ -43,13 +43,18 @@ class TutorRegistrationForm(UserCreationForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'id': 'name',
+                'id': 'id_name',
                 'placeholder': 'Enter name'
             }),
             'username': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id': 'id_username',
                 'placeholder': 'Enter username'
+            }),
+            'email' : forms.EmailInput(attrs={
+                'class': 'form-control',
+                'id': 'id_email',
+                'placeholder': 'Enter your email'
             }),
             'password1': forms.PasswordInput(attrs={
                 'class': 'form-control',
@@ -62,6 +67,10 @@ class TutorRegistrationForm(UserCreationForm):
                 'placeholder': 'Confirm password'
             }),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
 
 
 

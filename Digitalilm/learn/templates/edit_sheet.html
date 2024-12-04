@@ -32,19 +32,10 @@
             {% for form in formset %}
                 <div class="question-container border-bottom pb-3 mb-4">
                     {{ form.as_p }}
-                    {% comment %} <div class="form-check">
-                        <!-- Render the checkbox manually -->
-                        <input type="checkbox" class="form-check-input" id="{{ form.DELETE.id_for_label }}" name="{{ form.DELETE.html_name }}" style="transform: scale(1.5);">
-                        
-                        <!-- Render the label -->
-                        <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">
-                            Delete
-                        </label>
-                        
-                    </div>
-                     {% endcomment %}
-
-                    {% comment %} <button type="button" class="remove-question btn btn-danger float-right">Remove</button> {% endcomment %}
+                    {% comment %} <div class="input-group flex-nowrap">
+                        <span class="input-group-text" id="addon-wrapping">A</span>
+                        {{ form.a }}
+                      </div> {% endcomment %}
                 </div>
             {% endfor %}
             <div id="additional-questions"></div>
