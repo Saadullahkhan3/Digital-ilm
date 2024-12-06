@@ -1,0 +1,10 @@
+html[data-bs-theme="light"]{
+    .input-group-text{
+        background-color: hsl(210, 17%, 94%);
+    }
+}
+/* 
+hsl(210, 17%, 98%)
+rgb(248, 249, 250)
+hsl(210, 17%, 98%)
+*/

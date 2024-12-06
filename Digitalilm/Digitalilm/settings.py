@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'learn',
+    "django_bootstrap5",
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
-
+{% load django_bootstrap5 %}
+{% load static %}
+{% load widget_tweaks %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/utils.css' %}">
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
 {% block title %}Create Sheet{% endblock %}
 
 {% block body %}
@@ -9,22 +15,26 @@
         
         <h1 class="text-center mb-4">Question Sheet</h1>
         
-        {{ question_sheet_form.as_p }}
+        {{ question_sheet_form.title|add_class:"form-control" }}
+        {{ question_sheet_form.level|add_class:"form-select px-5" }}
         
         <h2 class="mt-5 text-center">Questions</h2>
         {{ formset.management_form }}  <!-- Management form required for formset -->
         
         <div id="questions">
+
             {% for form in formset %}
-                <div class="question-container border-bottom pb-3 mb-4">
-                    {{ form.as_p }}
-                    <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
+            <div class="question-container border-bottom pb-3 mb-4">
+
+                {% bootstrap_form form %}
+                
+                <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
                 </div>
             {% endfor %}
             <div id="additional-questions"></div>
         </div>
         
-        <button type="button" id="add-question" class="btn btn-primary mt-4">Add Question</button>
+        <button type="button" id="add-question" class="btn btn-primary mt-4 me-2">Add Question</button>
         <button type="submit" class="btn btn-success mt-4">Submit</button>
     </form>
 </div>
@@ -33,14 +43,12 @@
 <script>
     $(document).ready(function() {
         var questionIndex = {{ formset.total_form_count }};  // Start from the current number of forms
-        console.log("Initial questionIndex: ", questionIndex);
 
         // Remove question event handler
         $(document).on('click', '.remove-question', function() {
             $(this).parent('.question-container').remove();
             questionIndex--;
             $('#id_form-TOTAL_FORMS').val(questionIndex);  // Update the form-TOTAL_FORMS hidden input
-            console.log("Question removed, new questionIndex: ", questionIndex);
             updateQuestionNumbers(); 
         });
 
@@ -60,7 +68,6 @@
                     $('#additional-questions').append(html);
                     questionIndex++;
                     $('#id_form-TOTAL_FORMS').val(questionIndex);  // Update form-TOTAL_FORMS
-                    console.log("New question added, updated questionIndex: ", questionIndex);
                     updateQuestionNumbers();
                 },
                 error: function(xhr, status, error) {
@@ -74,7 +81,6 @@
             $('.question-container').each(function(index, element) {
                 $(element).find('h4').text('Question ' + (index + 1));
             });
-            console.log("Question numbers updated");
         }
     });
 </script>
