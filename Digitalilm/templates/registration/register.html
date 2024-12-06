@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% load django_bootstrap5 %}
 {% block title %}Registration{% endblock %}
 
 {% block body %}
@@ -9,31 +9,7 @@
                 <h2 class="card-title text-center mb-5">Tutor Registration</h2>
                 <form method="POST">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="id_name" class="form-label">Name</label>
-                        {{ form.name }}
-                        <div id="nameHelp" class="form-text">Enter your name.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_username" class="form-label">Username</label>
-                        {{ form.username }}
-                        <div id="usernameHelp" class="form-text">Username should be Unique.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_email" class="form-label">Email address</label>
-                        {{ form.email }}
-                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_password1" class="form-label">Password</label>
-                        {{ form.password1 }}
-                        <div id="PasswordHelp" class="form-text">Create a powerful password.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_password2" class="form-label">Confirm Password</label>
-                        {{ form.password2 }}
-                        <div id="confirmPasswordHelp" class="form-text">Re-Type your Password.</div>
-                    </div>
+                    {% bootstrap_form form %}
                     <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Submit</button>
                 </form>
             </div>
