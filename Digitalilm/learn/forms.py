@@ -33,7 +33,7 @@ class InputWrapper(forms.TextInput):
         input_html = super().render(name, value, attrs, renderer)
         # Wrap it in a div with an optional add-on
         if self.add_on:
-            return mark_safe(f'<p class="input-group"><label class="input-group-text">{self.add_on}</label>{input_html}{f"<span class=\"input-group-text\">{self.another_add_on}</span>" if self.another_add_on else ""}</p>')
+            return mark_safe(f'''<p class="input-group"><label class="input-group-text">{self.add_on}</label>{input_html}{f'''<span class="input-group-text">{self.another_add_on}</span>''' if self.another_add_on else ""}</p>''')
         return mark_safe(f'<div>{input_html}</div>')  # No add-on
 
 
@@ -50,7 +50,7 @@ class InputSelectWrapper(forms.Select):
         input_html = super().render(name, value, attrs, renderer)
         # Wrap it in a div with an optional add-on
         if self.add_on:
-            return mark_safe(f'<p class="input-group w-fit-content"><label class="input-group-text">{self.add_on}</label>{input_html}{"<span class=\"input-group-text\">{{self.another_add_on}}</span>" if self.another_add_on else ""}</p>')
+            return mark_safe(f'''<p class="input-group w-fit-content"><label class="input-group-text">{self.add_on}</label>{input_html}{f'''<span class="input-group-text">{self.another_add_on}</span>''' if self.another_add_on else ""}</p>''')
         return mark_safe(f'<div>{input_html}</div>')  # No add-on
 
 
