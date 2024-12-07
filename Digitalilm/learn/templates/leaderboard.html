@@ -1,4 +1,10 @@
 {% extends "layout.html" %}
+{% load static %}
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+
+{% endblock %}
 
 {% block title %}Leaderboard{% endblock %}
 
@@ -6,44 +12,35 @@
 {% block body %}
 
 
-<div class="container mt-5">
+<div class="leaderboard-container container mt-5">
   <div class="card">
       <div class="card-body">
           <h1 class="card-title text-center display-1 fw-bold">{{ question_sheet.title }}</h1>
           <h1 class="card-title text-center display-5 text-success">Leaderboard</h1>
 
           <!-- First Scenario: Show the current user in a separate card if redirected -->
-          {% comment %} <!-- First Scenario: Show the current user in a separate card if redirected --> {% endcomment %}
           {% if redirected and student %}
           <div class="card mb-4">
               <div class="card-body shadow">
-                  <h2 class="text-center">You</h2>
-                  <div class="mx-4"
-                       style="
-                       display: flex;
-                       align-items: center;
-                       justify-content: space-between;
-                       ">
-                      <h3 class="mt-2 mr-2">
-                          {{ student.id }} | {{ student.name }}
-                      </h3>
-                      <span class="" 
-                            style="
-                            flex-grow: 1;
-                            border-bottom: 1px solid #000;
-                            margin-right: 10px;
-                            "></span>
-                      <h4>
-                          {{ student.score }}
-                      </h4>
+                  <h3 class="text-center mb-3">You</h3>
+                  <div class="ps-1 d-flex align-items-center justify-content-between">
+                    <h4 class="pe-3 text-secondary">{{ student.id }}</h5>
+                    <h4 class="mr-2 truncate-word">
+                        {{ student.name }}
+                    </h4>
+                    <span class="border-bottom border-success flex-grow-1 mx-3"></span>
+                    <h4 class="">
+                        {{ student.score }}
+                    </h4>
                   </div>
 
                 <!-- URL Display and Copy Button -->
                 <div class="input-group mt-3">
                     <input type="text" class="form-control" id="achievementUrl" value="{{ request.build_absolute_uri }}" readonly>
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" id="copyUrlBtn">Copy URL</button>
-                    </div>
+                        <button class="
+                        input-group-text
+                        btn-primary
+                         btn " id="copyUrlBtn">Copy URL</button>
                 </div>
                 <p class="text-success mt-2" id="copySuccessMessage" style="display: none;">URL Copied!</p>
 
@@ -51,26 +48,24 @@
           </div>
           {% endif %}
 
+
           <!-- Second Scenario: Show other students -->
+          <div class="stu-div mx-3 mb-2 text-secondary d-flex align-items-center justify-content-between">
+            <h6 class="stu-id pe-3 text-secondary">ID</h6>
+            <h6 class="mr-2">Names</h6>
+            <span class="border-bottom border-dark-subtle flex-grow-1 mx-3"></span>
+            <h6 class="">Score</h6>
+          </div>
           {% for student in all_students %}
-          <div class="mx-4 mb-2"
-               style="
-               display: flex;
-               align-items: center;
-               justify-content: space-between;
-               ">
-              <h3 class="mt-2 mr-2">
-                {{ student.id }} | {{ student.name }}
-              </h3>
-              <span class="" 
-                    style="
-                    flex-grow: 1;
-                    border-bottom: 1px solid #000;
-                    margin-right: 10px;
-                    "></span>
-              <h4>
+          <div class="stu-div mx-3 mb-2 d-flex align-items-center justify-content-between">
+            <h5 class="stu-id pe-3 text-secondary">{{ student.id }}</h5>
+              <h5 class="mr-2 truncate-word">
+                {{ student.name }}
+              </h5>
+              <span class="border-bottom border-dark-subtle flex-grow-1 mx-3"></span>
+              <h5 class="">
                   {{ student.score }}
-              </h4>
+              </h5>
           </div>
           {% endfor %}
       </div>

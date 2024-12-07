@@ -1,0 +1,22 @@
+.truncate-word{
+    width: clamp(5ch, fit-content, max-content);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+@media (max-width:992px){
+    :root{
+        --value: calc(1rem * 0.5);
+    }
+    .leaderboard-container{
+        padding-inline: var(--value)!important;
+        padding-inline: 0!important;
+        min-width: 100%!important;
+    }
+    .stu-div{
+        margin-inline: var(--value)!important;
+    }
+    .stu-id{
+        padding-right: var(--value)!important
+    }
+}
