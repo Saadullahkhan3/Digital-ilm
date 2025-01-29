@@ -1,9 +1,48 @@
-from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django.utils.safestring import mark_safe
 from .models import QuestionSheet, Question
 
+from django import forms
+from django.forms import BaseModelFormSet
+
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+from django.utils.safestring import mark_safe
+
+
+class QuestionModelFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+    def total_form_count(self):
+        # Use the largest index from the POST data instead of consecutive counting
+        if self.data:
+            max_index = 0
+            for key in self.data.keys():
+                # Look for form-TXYZ-question pattern or similar
+                if key.startswith(f'{self.prefix}-') and key.endswith('-question'):
+                    # Extract form index
+                    parts = key.split('-')
+                    try:
+                        idx = int(parts[1])
+                        if idx > max_index:
+                            max_index = idx
+                    except ValueError:
+                        pass
+            # Add 1 because indices are zero-based
+            return max_index + 1
+        return super().total_form_count()
+
+    def clean(self):
+        super().clean()
+        if any(self.errors):
+            return
+        
+        print(f"WOW -> {self.forms}")
+        
+        # Remove or comment out any 'order' reindexing
+        for i, form in enumerate(self.forms):
+            if self.can_delete and self._should_delete_form(form):
+                continue
 
 
 def remove_label(self_fields):
@@ -55,6 +94,26 @@ class InputSelectWrapper(forms.Select):
 
 
 
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['question', 'answer', 'a', 'b', 'c', 'd']
+        widgets = {
+            'question': InputWrapper(add_on='Question'),
+            'answer': InputSelectWrapper(add_on='Answer'),
+            'a': InputWrapper(add_on="A"),
+            'b': InputWrapper(add_on="B"),
+            'c': InputWrapper(add_on="C", another_add_on="Optional"),
+            'd': InputWrapper(add_on="D", another_add_on="Optional"),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        remove_label(self.fields)
+        add_custom_classes(self.fields.values())
+         
+         
+         
 class QuestionSheetForm(forms.ModelForm):
     class Meta:
         model = QuestionSheet
@@ -69,33 +128,8 @@ class QuestionSheetForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         remove_label(self.fields)
         # add_custom_classes(self.fields.values())
-
-
-
-class QuestionForm(forms.ModelForm):
-    def __init(self, edit=False, *args, **kwargs):
-        super.__init__(*args, **kwargs)
-        print("EDIT ----------------> ", edit)
-
-    class Meta:
-        model = Question
-        fields = ['question', 'answer', 'a', 'b', 'c', 'd']
-        widgets = {
-            'question': InputWrapper(add_on='Question'),
-            'answer': InputSelectWrapper(add_on='Answer'),
-            'a': InputWrapper(add_on="A"),
-            'b': InputWrapper(add_on="B"),
-            'c': InputWrapper(add_on="C", another_add_on="Optional"),
-            'd': InputWrapper(add_on="D", another_add_on="Optional"),
-        }
-
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        remove_label(self.fields)
-        add_custom_classes(self.fields.values())
-
-            
+        
+                 
 
 class TutorRegistrationForm(UserCreationForm):
     name = forms.CharField(max_length=100)
