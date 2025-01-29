@@ -1,5 +1,5 @@
 from .models import QuestionSheet, Question, Student
-from .forms import TutorRegistrationForm, QuestionSheetForm, QuestionForm
+from .forms import TutorRegistrationForm, QuestionSheetForm, QuestionForm, QuestionModelFormSet
 
 from django.forms import modelformset_factory, formset_factory
 
@@ -151,67 +151,11 @@ def _get_question_form(request):
         'html': form.as_p().replace('id_form-0-', f'id_form-{index}-').replace('form-0-', f'form-{index}-')
     })
 
-# [INTERNAL USAGE]
-def _get_forms_data(request):
-    forms = list()
-    total = int(request.POST.get("form-TOTAL_FORMS"), 0)
-
-    for index in range(total+1):
-        l = {k.replace(f"form-{index}-", ""): v for k, v in request.POST.items() if k.startswith(f"form-{index}")}
-
-        if not l:
-            continue
-
-        index += 1
-        forms.append(l)
-
-    return forms
-
-# [INTERNAL USAGE]
-def _assign_values_to_question(question, form, question_sheet):
-    question.question = form["question"]
-    question.answer = form["answer"]
-    question.question_sheet = question_sheet
-    question.a = form["a"]
-    question.b = form["b"]
-    question.c = form["c"]
-    question.d = form["d"]
-    question.a = form["a"]
-    
-    return question
-
-# [INTERNAL USAGE]
-def _manage_question_from_request(request, question_sheet): 
-    # Save each question and link it to the question sheet
-    for form in _get_forms_data(request):
-
-        _id = form.get("id", False)
-
-        if form.get('DELETE', False) and _id:  # Check if the form is marked for deletion
-            question = Question.objects.filter(id=_id)
-
-            if question:
-                question.delete()
-            continue
-
-        else:
-            # Already exsits question, that were edited
-            if _id:
-                question = Question.objects.get(id=_id)
-                question = _assign_values_to_question(question, form, question_sheet)
-                question.save()
-            
-            # New question added, that were created
-            else:
-                question = Question()
-                question = _assign_values_to_question(question, form, question_sheet)
-                question.save()
-
 
 @login_required
 def create_question_sheet(request):
     # Dynamically handle multiple questions
-    QuestionFormSet = modelformset_factory(Question, form=QuestionForm, extra=1)  
+    QuestionFormSet = modelformset_factory(Question, form=QuestionForm, formset=QuestionModelFormSet, fields=('question', 'answer', 'a', 'b', 'c', 'd'), extra=1)
 
     if request.method == 'POST':
         question_sheet_form = QuestionSheetForm(request.POST)
@@ -223,7 +167,12 @@ def create_question_sheet(request):
             question_sheet.tutor = request.user 
             question_sheet.save()
 
-            _manage_question_from_request(request, question_sheet)
+            for form in formset:
+                question = form.save(commit=False)
+                question.question_sheet = question_sheet
+                question.save()
+                    
+            formset.save()
 
             return redirect('question_sheet_by_id', question_sheet.id)
     else:
@@ -239,7 +188,7 @@ def create_question_sheet(request):
 @login_required
 def edit_sheet(request, question_sheet_id):
     # Dynamically handle multiple questions
-    QuestionFormSet = modelformset_factory(Question, form=QuestionForm, extra=0, can_delete=True)  
+    QuestionFormSet = modelformset_factory(Question, form=QuestionForm, formset=QuestionModelFormSet, fields=('question', 'answer', 'a', 'b', 'c', 'd'), extra=0, can_delete=True)
 
     _question_sheet = QuestionSheet.objects.filter(id=question_sheet_id, tutor=request.user)
 
@@ -250,20 +199,26 @@ def edit_sheet(request, question_sheet_id):
     _question_sheet = _question_sheet[0]
 
     _questions = Question.objects.filter(question_sheet=_question_sheet.id)
+    
     if request.method == 'POST':
-
         question_sheet_form = QuestionSheetForm(request.POST, instance=_question_sheet)
         formset = QuestionFormSet(request.POST, queryset=_questions)
 
         if question_sheet_form.is_valid() and formset.is_valid():
-            # Save QuestionSheet instance(Not in Database)
             question_sheet = question_sheet_form.save(commit=False)
             question_sheet.save()
             
-            # Utility that handle all the question work
-            _manage_question_from_request(request, question_sheet)
+            for form in formset:
+                if form.cleaned_data.get('DELETE'):
+                    if form.instance.pk:
+                        form.instance.delete()
+                else:
+                    question = form.save(commit=False)
+                    question.question_sheet = question_sheet
+                    question.save()
+                    
+            formset.save()
 
-            # Showing new created Question sheet 
             return redirect('question_sheet_by_id', question_sheet.id)
     else:
         question_sheet_form = QuestionSheetForm(instance=_question_sheet)
