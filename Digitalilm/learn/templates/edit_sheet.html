@@ -39,25 +39,27 @@
         <div id="questions">
             {% for form in formset %}
                 <div class="question-container border-bottom pb-3 mb-4">
-                    {% for field in form%}
-                    {% if field.name  == "DELETE" %}
-                        <p class="input-group w-fit-content">
-                            <span class="input-group-text">
-                                    {{ field|add_class:"form-check-input" }}
-                            </span>
-                            <label class="form-control px-4">Delete</label>
-                        </p>
-                    {% else %}
+                    {% for field in form %}
+                        {% if field.name == "DELETE" %}
+                            {% if form.instance.pk %}
+                                <p class="input-group w-fit-content">
+                                    <span class="input-group-text">
+                                        {{ field|add_class:"form-check-input" }}
+                                    </span>
+                                    <label class="form-control px-4">Delete</label>
+                                </p>
+                            {% endif %}
+                        {% else %}
                             {{ field }}
-                    {% endif %}
+                        {% endif %}
                     {% endfor %}
-
-                
+                    {% if not form.instance.pk %}
+                        <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
+                    {% endif %}
                 </div>
             {% endfor %}
             <div id="additional-questions"></div>
         </div>
-        
         <button type="button" id="add-question" class="btn btn-primary mt-4">Add Question</button>
         <button type="submit" class="btn btn-success mt-4">Submit</button>
     </form>
@@ -72,10 +74,8 @@
 
         // Remove question event handler
         $(document).on('click', '.remove-question', function() {
-            $(this).parent('.question-container').remove();
-            questionIndex--;
-            $('#id_form-TOTAL_FORMS').val(questionIndex);  // Update the form-TOTAL_FORMS hidden input
-            updateQuestionNumbers(); 
+            $(this).closest('.question-container').remove();
+            updateFormIndices();
         });
 
         // Add question event handler
@@ -93,8 +93,7 @@
                     `;
                     $('#additional-questions').append(html);
                     questionIndex++;
-                    $('#id_form-TOTAL_FORMS').val(questionIndex);  // Update form-TOTAL_FORMS
-                    updateQuestionNumbers();
+                    updateFormIndices();
                 },
                 error: function(xhr, status, error) {
                     console.error("Error adding new question:", xhr.responseText);
@@ -102,11 +101,21 @@
             });
         });
 
-        // Update question numbers after adding/removing
-        function updateQuestionNumbers() {
+        // Update form indices and form-TOTAL_FORMS hidden input
+        function updateFormIndices() {
+            var totalForms = 0;
             $('.question-container').each(function(index, element) {
-                $(element).find('h4').text('Question ' + (index + 1));
+                $(element).find(':input').each(function() {
+                    var name = $(this).attr('name');
+                    if (name) {
+                        var newName = name.replace(/form-\d+-/, 'form-' + totalForms + '-');
+                        $(this).attr('name', newName);
+                        $(this).attr('id', 'id_' + newName);
+                    }
+                });
+                totalForms++;
             });
+            $('#id_form-TOTAL_FORMS').val(totalForms);  // Update form-TOTAL_FORMS hidden input
         }
     });
 </script>
