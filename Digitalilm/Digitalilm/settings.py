@@ -144,4 +144,3 @@ LOGOUT_REDIRECT_URL = "/"
 # username: MuzammilBilwani
 # Email: Muzammil.Bilwani@hotmail.com
 # Password: MuZZamMilhonMennOhoo
- 
