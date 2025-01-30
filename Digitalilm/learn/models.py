@@ -48,6 +48,10 @@ class QuestionSheet(models.Model):
     def __str__(self):
         return self.title
 
+    @classmethod
+    def get_levels(cls):
+        return [choice[0] for choice in cls._meta.get_field('level').choices]
+
 
 
 class Question(models.Model):

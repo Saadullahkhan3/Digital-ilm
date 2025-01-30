@@ -3,6 +3,8 @@ from .forms import TutorRegistrationForm, QuestionSheetForm, QuestionForm, Quest
 
 from django.forms import modelformset_factory, formset_factory
 
+from django.db.models import Q
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -16,11 +18,21 @@ from pprint import pprint
 
 
 
-
 # ---------------- General -----------------
 def explore_quizzes(request):
-    questions_sheet = QuestionSheet.objects.all()
-    return render(request, 'explore_quizzes.html', {"questions": questions_sheet})
+    valid_levels = QuestionSheet.get_levels()
+    level = request.GET.get('level')
+
+    if level and level.isdigit():
+        level = int(level)
+        if level in valid_levels:
+            question_sheets = QuestionSheet.objects.filter(level=level)
+        else:
+            question_sheets = QuestionSheet.objects.all()
+    else:
+        question_sheets = QuestionSheet.objects.all()
+        
+    return render(request, 'explore_quizzes.html', {"question_sheets": question_sheets, "valid_levels": valid_levels})
 
 
 

@@ -5,20 +5,34 @@
 {% block body %}
     <div class="container mt-5">
         <h1 class="display-4 text-center mb-5">Explore Quizzes</h1>
+
+        <form action="{% url 'explore-quizzes' %}" method="GET" class="mb-5">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="level">Level</label>
+                <select class="form-select" id="level" name="level">
+                    <option value="" {% if not request.GET.level %}selected{% endif %}>All</option>
+                    {% for level in valid_levels %}
+                    <option value="{{ level }}" {% if request.GET.level == level|stringformat:"s" %}selected{% endif %}>{{ level }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
         <div class="row g-4">
-            {% for question in questions %}
+            {% for question_sheet in question_sheets %}
             <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                     <div class="card h-100 shadow-lg">
                         <div class="card-body">
-                            <h3 class="card-title">{{ question.title }}</h3>
-                            <h5 class="text-muted mb-2">Tutor: {{ question.tutor }}</h5>
-                            <h5 class="text-muted mb-2">Level: {{ question.level }}</h5>
+                            <h3 class="card-title">{{ question_sheet.title }}</h3>
+                            <h5 class="text-muted mb-2">Tutor: {{ question_sheet.tutor }}</h5>
+                            <h5 class="text-muted mb-2">Level: {{ question_sheet.level }}</h5>
                             <div class="edit-inspect d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <a href="{% url 'question_sheet_by_id' question.id %}" class="btn flex-grow-1 btn-primary mt-auto" 
+                                <a href="{% url 'question_sheet_by_id' question_sheet.id %}" class="btn flex-grow-1 btn-primary mt-auto" 
                                 
                                 ">Attempt</a>
                                 
-                                <a href="{% url 'leaderboard_by_id' question.id %}" class="btn btn-success flex-grow-1 mt-2"
+                                <a href="{% url 'leaderboard_by_id' question_sheet.id %}" class="btn btn-success flex-grow-1 mt-2"
                                 ">Leaderboard</a>
                             </div>
                         </div>
