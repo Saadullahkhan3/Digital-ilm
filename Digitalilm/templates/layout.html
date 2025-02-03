@@ -136,7 +136,11 @@
 
 {% block body %}{% endblock %}
 
-    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src={% static "js/base.js" %}></script>
 </body>
+
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src={% static "js/base.js" %}></script>
+
+{% block scripts %}{% endblock %}
+
 </html>
