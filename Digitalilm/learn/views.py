@@ -21,18 +21,33 @@ from pprint import pprint
 # ---------------- General -----------------
 def explore_quizzes(request):
     valid_levels = QuestionSheet.get_levels()
+    tutors = User.objects.all()
     level = request.GET.get('level')
+    tutor = request.GET.get('tutor')
+    title = request.GET.get('title')
 
+    filters = Q()
     if level and level.isdigit():
         level = int(level)
         if level in valid_levels:
-            question_sheets = QuestionSheet.objects.filter(level=level)
-        else:
-            question_sheets = QuestionSheet.objects.all()
+            filters &= Q(level=level)
+
+    if tutor:
+        filters &= Q(tutor__username__icontains=tutor)
+        
+    if title:
+        filters &= Q(title__icontains=title)
+
+    if filters:
+        question_sheets = QuestionSheet.objects.filter(filters)
     else:
         question_sheets = QuestionSheet.objects.all()
-        
-    return render(request, 'explore_quizzes.html', {"question_sheets": question_sheets, "valid_levels": valid_levels})
+    
+    return render(request, 'explore_quizzes.html', {
+        "question_sheets": question_sheets,
+        "valid_levels": valid_levels,
+        "tutors": tutors
+    })
 
 
 
