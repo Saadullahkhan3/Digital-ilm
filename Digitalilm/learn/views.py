@@ -22,15 +22,15 @@ from pprint import pprint
 def explore_quizzes(request):
     valid_levels = QuestionSheet.get_levels()
     tutors = User.objects.all()
-    level = request.GET.get('level')
+    levels = request.GET.get('level', '').split(',')
     tutor = request.GET.get('tutor')
     title = request.GET.get('title')
 
     filters = Q()
-    if level and level.isdigit():
-        level = int(level)
-        if level in valid_levels:
-            filters &= Q(level=level)
+    if levels and levels != ['']:
+        levels = [int(level) for level in levels if level.isdigit() and int(level) in valid_levels]
+        if levels:
+            filters &= Q(level__in=levels)
 
     if tutor:
         filters &= Q(tutor__username__icontains=tutor)

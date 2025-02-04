@@ -2,71 +2,169 @@
 
 {% block title %}Learn{% endblock %}
 
-{% block body %}
-    <div class="container mt-5">
-        <h1 class="display-4 text-center mb-5">Explore Quizzes</h1>
+{% block head %}
+<style>
+    :root {
+        --primary-color: #6C63FF;
+        --secondary-color: #f8f9fa;
+    }
 
-        <form action="{% url 'explore-quizzes' %}" method="GET" class="mb-5">
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="level">Level</label>
-                <select class="form-select" id="level" name="level">
-                    <option value="" {% if not request.GET.level %}selected{% endif %}>All</option>
-                    {% for level in valid_levels %}
-                    <option value="{{ level }}" {% if request.GET.level == level|stringformat:"s" %}selected{% endif %}>{{ level }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-  
+    .level-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        height: 60px; /* Fixed height for square appearance */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .level-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
 
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="title">Title</label>
-                <input type="text" list="title-list" class="form-control" name="title" value="{{ request.GET.title }}" />
-                <datalist id="title-list">
-                    <select class="form-select" id="title">
-                        {% for title in titles %}
-                        <option value="{{ title }}">{{ title }}</option>
-                        {% endfor %}
-                    </select>
-                </datalist>
-            </div>
+    .level-card.active {
+        border-color: var(--primary-color)!important;
+        background-color: rgba(108, 99, 255, 0.05);
+    }
 
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="tutor">Tutor</label>
-                <input type="text" list="tutor-list" class="form-control" name="tutor" value="{{ request.GET.tutor }}" />
-                <datalist id="tutor-list">
-                    <select class="form-select" id="tutor">
-                        {% for tutor in tutors %}
-                        <option value="{{ tutor.username }}">{{ tutor.username }}</option>
-                        {% endfor %}
-                    </select>
-                </datalist>
-            </div>
+    .level-icon {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
 
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+    .level-title {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        text-align: center;
+        font-weight: 500;
+    }
 
-        <div class="row g-4">
-            {% for question_sheet in question_sheets %}
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-lg">
-                        <div class="card-body">
-                            <h3 class="card-title">{{ question_sheet.title }}</h3>
-                            <h5 class="text-muted mb-2">Tutor: {{ question_sheet.tutor }}</h5>
-                            <h5 class="text-muted mb-2">Level: {{ question_sheet.level }}</h5>
-                            <div class="edit-inspect d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <a href="{% url 'question_sheet_by_id' question_sheet.id %}" class="btn flex-grow-1 btn-primary mt-auto" 
-                                
-                                ">Attempt</a>
-                                
-                                <a href="{% url 'leaderboard_by_id' question_sheet.id %}" class="btn btn-success flex-grow-1 mt-2"
-                                ">Leaderboard</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    input[type="checkbox"]:checked + .checkbox {
+        background-color: var(--primary-color)!important;
+        border-color: var(--primary-color)!important;
+    }
+</style>
 {% endblock %}
 
 
+{% block body %}
+<div class="container mt-5">
+    <h1 class="display-4 text-center mb-5">Explore Quizzes</h1>
+    
+    <form action="{% url 'explore-quizzes' %}" method="GET" class="mb-5">
+        <div class="mb-3">
+            <h4 class="mb-4">Levels</h4>
+            <input type="hidden" name="level" id="level-input" value="{{ request.GET.level }}">
+            <div class="d-flex flex-wrap gap-2" id="levelsContainer">
+                <!-- Add 'All' option first -->
+                <div class="level-card flex-grow-1 flex-basis-0 flex-shrink-1 rounded border border-secondary-subtle {% if request.GET.level|lower == "all" %}active{% endif %}" data-level="All">
+                    <h5 class="mb-0">All</h5>
+                </div>
+                
+                {% for level in valid_levels %}
+                <div class="level-card flex-grow-1 flex-basis-0 flex-shrink-1 rounded border border-secondary-subtle {% if level|stringformat:'s' in selected_levels %}active{% endif %}" 
+                     data-level="{{ level }}">
+                    <h5 class="mb-0">{{ level }}</h5>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Rest of your form elements remain the same -->
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="tutor">Tutor</label>
+            <input type="text" list="tutor-list" class="form-control" name="tutor" value="{{ request.GET.tutor }}">
+            <datalist id="tutor-list">
+                {% for tutor in tutors %}
+                <option value="{{ tutor.username }}">{{ tutor.username }}</option>
+                {% endfor %}
+            </datalist>
+        </div>
+        
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="title">Title</label>
+            <input type="text" class="form-control" name="title" value="{{ request.GET.title }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <!-- Quiz cards section remains the same -->
+    <div class="row g-4">
+        {% for question_sheet in question_sheets %}
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title">{{ question_sheet.title }}</h3>
+                    <h5 class="text-muted mb-2">Tutor: {{ question_sheet.tutor }}</h5>
+                    <h5 class="text-muted mb-2">Level: {{ question_sheet.level }}</h5>
+                    <div class="edit-inspect d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <a href="{% url 'question_sheet_by_id' question_sheet.id %}" class="btn flex-grow-1 btn-primary mt-auto">Attempt</a>
+                        <a href="{% url 'leaderboard_by_id' question_sheet.id %}" class="btn btn-success flex-grow-1 mt-2">Leaderboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize with server-side selected levels
+    const initialLevels = "{{ request.GET.level|default:'' }}".split(',').filter(Boolean);
+    const selectedLevels = new Set(initialLevels);
+
+    // Event delegation for dynamic elements
+    document.getElementById('levelsContainer').addEventListener('click', (event) => {
+        const card = event.target.closest('.level-card');
+        if (!card) return;
+        
+        const level = card.dataset.level;
+        toggleLevel(level);
+    });
+
+    function toggleLevel(level) {
+        const isAll = level === 'All';
+        
+        if (isAll) {
+            selectedLevels.clear();
+            selectedLevels.add('All');
+        } else {
+            selectedLevels.delete('All');
+            if (selectedLevels.has(level)) {
+                selectedLevels.delete(level);
+            } else {
+                selectedLevels.add(level);
+            }
+        }
+
+        updateLevelDisplay();
+        updateLevelInput();
+    }
+
+    function updateLevelDisplay() {
+        document.querySelectorAll('.level-card').forEach(card => {
+            const cardLevel = card.dataset.level;
+            const isActive = selectedLevels.has(cardLevel) || 
+                           (cardLevel === 'All' && selectedLevels.has('All'));
+            card.classList.toggle('active', isActive);
+        });
+    }
+
+    function updateLevelInput() {
+        const levelInput = document.getElementById('level-input');
+        if (selectedLevels.has('All')) {
+            levelInput.value = 'All';
+        } else {
+            levelInput.value = Array.from(selectedLevels).join(',');
+        }
+    }
+
+    // Initial display update
+    updateLevelDisplay();
+</script>
+{% endblock %}
