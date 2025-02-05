@@ -88,11 +88,17 @@
             <label class="input-group-text" for="title">Title</label>
             <input type="text" class="form-control" name="title" value="{{ request.GET.title }}">
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
     </form>
 
     <!-- Quiz cards section remains the same -->
     <div class="row g-4">
+        
+        {%if not question_sheets %}
+        <h3 class="display-5 text-center">Oops!</h3>
+        <h4 class="display-6 text-center">There are no question sheets matching <i class="text-underline">your</i> query!</h4>
+        {% endif %}
+
         {% for question_sheet in question_sheets %}
         <div class="col-12 col-sm-12 col-md-6 col-lg-4">
             <div class="card h-100 shadow-lg">
