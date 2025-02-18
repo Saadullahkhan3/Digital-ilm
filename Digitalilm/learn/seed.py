@@ -3,7 +3,7 @@ from .models import QuestionSheet
 
 
 def seed_created_and_update_in_question_sheet_model():
-    return "Disabled, updated = models.DateTimeField(auto_now=True) in QuestionSheet model has been enabled"
+    # return "Disabled, updated = models.DateTimeField(auto_now=True) in QuestionSheet model has been enabled"
 
     for sheet in QuestionSheet.objects.all():
         # total_students = sheet.students.all().count()
