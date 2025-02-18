@@ -30,9 +30,8 @@
         <h1 class="text-center mb-4">EDIT</h1>
         <h1 class="text-center mb-4">Question Sheet</h1>
         
-        {{ question_sheet_form.title|add_class:"form-control" }}
-        {{ question_sheet_form.level|add_class:"form-select px-5" }}
-        
+        {% bootstrap_form question_sheet_form %}
+
         <h2 class="mt-5 text-center">Questions</h2>
         {{ formset.management_form }}  <!-- Management form required for formset -->
         
