@@ -35,10 +35,10 @@ class QuestionSheet(models.Model):
         (5, 5)]
     level = models.IntegerField(choices=l, default=1)
 
-    description = models.TextField(blank=True)
+    # description = models.TextField(blank=True)
     
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    # created = models.DateTimeField(auto_now_add=True)
+    # updated = models.DateTimeField(auto_now=True)
     
     # attempted_count = models.IntegerField(default=0)
 
