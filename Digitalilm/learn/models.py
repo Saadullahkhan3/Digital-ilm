@@ -38,7 +38,6 @@ class QuestionSheet(models.Model):
     # description = models.TextField(blank=True)
     
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField()
     # updated = models.DateTimeField(auto_now=True)
     
     # attempted_count = models.IntegerField(default=0)
