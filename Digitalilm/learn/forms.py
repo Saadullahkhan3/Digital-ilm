@@ -94,6 +94,19 @@ class InputSelectWrapper(forms.Select):
 
 
 
+class TextareaWrapper(forms.Textarea):
+    def __init__(self, add_on=None, *args, **kwargs):
+        self.add_on = add_on
+        super().__init__(*args, **kwargs)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        textarea_html = super().render(name, value, attrs, renderer)
+        if self.add_on:
+            return mark_safe(f'''<p class="input-group"><label class="input-group-text">{self.add_on}</label>{textarea_html}</p>''')
+        return mark_safe(f'<div>{textarea_html}</div>')  
+    
+    
+    
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
@@ -117,10 +130,11 @@ class QuestionForm(forms.ModelForm):
 class QuestionSheetForm(forms.ModelForm):
     class Meta:
         model = QuestionSheet
-        fields = ['title', 'level']
+        fields = ['title', 'level', 'description']
         widgets = {
             'title': InputWrapper(add_on="Title"),
-            'level': InputSelectWrapper(add_on="Level")
+            'level': InputSelectWrapper(add_on="Level"),
+            'description': TextareaWrapper(add_on="Description"),
         }
 
 
@@ -132,41 +146,13 @@ class QuestionSheetForm(forms.ModelForm):
                  
 
 class TutorRegistrationForm(UserCreationForm):
-    name = forms.CharField(max_length=100)
-    email = forms.EmailField()
     class Meta:
         model = User
-        fields = ("name", "username", "email", "password1", "password2")
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'id': 'id_name',
-                'placeholder': 'Enter name'
-            }),
-            'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'id': 'id_username',
-                'placeholder': 'Enter username'
-            }),
-            'email' : forms.EmailInput(attrs={
-                'class': 'form-control',
-                'id': 'id_email',
-                'placeholder': 'Enter your email'
-            }),
-            'password1': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'id': 'id_password1',
-                'placeholder': 'Enter password'
-            }),
-            'password2': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'id': 'id_password2',
-                'placeholder': 'Confirm password'
-            }),
-        }
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2")
 
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
