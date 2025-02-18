@@ -130,11 +130,13 @@ class QuestionForm(forms.ModelForm):
 class QuestionSheetForm(forms.ModelForm):
     class Meta:
         model = QuestionSheet
-        fields = ['title', 'level', 'description']
+        fields = ['title', 'level', 
+                #   'description'
+                  ]
         widgets = {
             'title': InputWrapper(add_on="Title"),
             'level': InputSelectWrapper(add_on="Level"),
-            'description': TextareaWrapper(add_on="Description"),
+            # 'description': TextareaWrapper(add_on="Description"),
         }
 
 
