@@ -68,7 +68,7 @@ def check_answers(request, db_answers, sheet):
 
 # [INTERNAL USAGE]
 def extract_question_with_id(sheet):
-    raw_questions = sheet.all_questions() 
+    raw_questions = sheet.questions.all()
     q = [q.answer_with_id() for q in raw_questions]
 
     all_answer = {key: value for d in q for key, value in d.items()}
@@ -95,7 +95,7 @@ def question_sheet_by_id(request, question_sheet_id):
         # return redirect('leaderboard_by_id', question_sheet_id, kwargs={"student":student})
     
     else:
-        raw_questions = question_sheet.all_questions() 
+        raw_questions = question_sheet.questions.all()
 
         questions = [q.all() for q in raw_questions]
 
