@@ -37,8 +37,6 @@ class QuestionModelFormSet(BaseModelFormSet):
         if any(self.errors):
             return
         
-        print(f"WOW -> {self.forms}")
-        
         # Remove or comment out any 'order' reindexing
         for i, form in enumerate(self.forms):
             if self.can_delete and self._should_delete_form(form):
