@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError  # For raising validation errors in the form [just keep it so I knew what I did]
 
 
 class QuestionModelFormSet(BaseModelFormSet):
@@ -122,6 +123,22 @@ class QuestionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         remove_label(self.fields)
         add_custom_classes(self.fields.values())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        c = cleaned_data.get("c")
+        d = cleaned_data.get("d")
+        answer = cleaned_data.get("answer")
+
+        # Check if C is blank but D exists
+        if not c and d:
+            self.add_error('c', "Option C can't be blank if Option D exists")
+
+        # Check if the chosen answer is blank
+        if cleaned_data.get(answer) is None:
+            self.add_error('answer', "Chosen answer can't be blank")
+
+        return cleaned_data
          
          
          

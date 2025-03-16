@@ -24,8 +24,21 @@
 
             {% for form in formset %}
             <div class="question-container border-bottom pb-3 mb-4">
+                {% comment %} {% bootstrap_form form %} {% endcomment %}
+                {% for field in form %}
+                    {% if field.errors %}
 
-                {% bootstrap_form form %}
+                        {% render_field field|add_class:"is-invalid"|attr:"ariadescribedby:{{ forloop.counter }}Feedback" %}
+                            
+                        <p id="{{ forloop.counter }}Feedback" class="invalid-feedback">
+                            {{ field.errors}}
+                        </p>
+                            
+                    {% else %}
+                        {% comment %} {{ field|add_class:"is-valid" }} {% endcomment %}
+                        {{ field }}
+                    {% endif %}
+                {% endfor %}
                 
                 <button type="button" class="remove-question btn btn-danger float-right">Remove</button>
                 </div>
