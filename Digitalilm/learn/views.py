@@ -195,6 +195,10 @@ def create_question_sheet(request):
             question_sheet.save()
 
             for form in formset:
+                # Skipping blank forms
+                if not form.cleaned_data:
+                    continue
+
                 question = form.save(commit=False)
                 question.question_sheet = question_sheet
                 question.save()
@@ -236,6 +240,10 @@ def edit_sheet(request, question_sheet_id):
             question_sheet.save()
             
             for form in formset:
+                # Skipping blank forms
+                if not form.cleaned_data:
+                    continue
+
                 if form.cleaned_data.get('DELETE'):
                     if form.instance.pk:
                         form.instance.delete()
